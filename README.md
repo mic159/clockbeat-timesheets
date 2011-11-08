@@ -8,3 +8,4 @@ and adds a handy filtering system to find those activity codes easily.
 Credits
 -------
 Big thanks go to [David Johnstone](http://davidjohnstone.net), who did most of the restyling.
+Here is his [original scripts](http://www.markitdown.net/view/0d60e424)

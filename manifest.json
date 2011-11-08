@@ -1,10 +1,11 @@
 {
   "name": "Clockbeat restyle",
-  "version": "1.0.0",
+  "version": "1.0.1",
+  "homepage_url": "https://github.com/mic159/clockbeat-timesheets",
   "description": "Restyles the Clockbeat timesheet system, and adds a handy search feature.",
   "content_scripts": [
   	{
-  	  "matches": ["http://timesheet.clockbeat.com/auth.php/timeworked.php"],
+  	  "matches": ["http://timesheet.clockbeat.com/auth.php/timeworked*"],
   	  "css": ["theme.css"],
   	  "js": ["jquery.js", "theme.js"]
     }
