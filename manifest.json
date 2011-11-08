@@ -1,0 +1,17 @@
+{
+  "name": "Clockbeat restyle",
+  "version": "0.0.1",
+  "description": "Restyles the Clockbeat timesheet system, and adds a handy search feature.",
+  "content_scripts": [
+  	{
+  	  "matches": ["http://timesheet.clockbeat.com/auth.php/timeworked.php"],
+  	  "css": ["theme.css"],
+  	  "js": ["jquery.js", "theme.js"]
+    }
+  ],
+  "icons": {
+    "16": "icon_16.png",
+    "128": "icon_128.png"
+  },
+  "permissions": [ "http://timesheet.clockbeat.com/" ]
+}
