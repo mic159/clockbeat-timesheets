@@ -1,5 +1,11 @@
 (function() {
-  var activityOptions, calendarButton, choicesLink, copyLink, date, helpLink, inputTd, match, nextLink, optionsLink, prevLink, printLink, randomForm, submitButton, title;
+  var activityOptions, calendarButton, choicesLink, copyLink, date, helpLink, inputTd, logoffLink, match, nextLink, optionsLink, prevLink, printLink, randomForm, submitButton, title;
+  if ($('input[name="login_user"]').length > 0) {
+    $("table").css({
+      display: "block"
+    });
+    return;
+  }
   $('form select').parent().parent().prepend('<td><input class="filter-text" type="text"/></td>');
   $('form tr:eq(0)').prepend('<td></td>');
   $('form tr:eq(1)').prepend('<td>Filter</td>');
@@ -79,11 +85,14 @@
   nextLink = $('table:eq(3) a:eq(1)');
   copyLink = $('table:eq(3) a:eq(2)');
   printLink = $('table:eq(3) a:eq(3)');
+  logoffLink = $("<a>Logoff</a>").attr({
+    href: "/auth.php/logoff.php"
+  });
   choicesLink.text(choicesLink.text().replace('(', '').replace(')', '').replace('choices', 'activities'));
   prevLink.text('Last week');
   nextLink.text('Next week');
   $('#mainarea').append('<div id="options" class="links"></div>');
-  $('#options').append(optionsLink).append(helpLink).append(printLink);
+  $('#options').append(optionsLink).append(helpLink).append(printLink).append(logoffLink);
   $('h2').after('<div id="navigation" class="links"></div>');
   $('#navigation').append(prevLink).append(calendarButton).append(nextLink);
   $('#table tr:last td:eq(1)').append(choicesLink).append(copyLink).wrapInner('<span class="links"></span>');
