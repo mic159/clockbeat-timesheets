@@ -2,7 +2,7 @@
 #   STYLER HELPER
 ########################
 
-class Styler
+styler =
     start: ->
         @common()
         
@@ -237,4 +237,4 @@ class Styler
 #   BEGIN!
 ########################
 
-styler = new Styler().start()
+styler.start()

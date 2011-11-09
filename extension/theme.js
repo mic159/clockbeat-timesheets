@@ -1,9 +1,8 @@
 (function() {
-  var Styler, styler;
+  var styler;
   var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty;
-  Styler = (function() {
-    function Styler() {}
-    Styler.prototype.start = function() {
+  styler = {
+    start: function() {
       this.common();
       if ($('input[name="login_user"]').length > 0) {
         this.loginPage();
@@ -13,8 +12,8 @@
       return $("table", this.mainArea).css({
         display: "block"
       });
-    };
-    Styler.prototype.common = function() {
+    },
+    common: function() {
       var id, _i, _len, _ref, _results;
       $('hr').remove();
       $('style').html('');
@@ -38,8 +37,8 @@
         })));
       }
       return _results;
-    };
-    Styler.prototype.loginPage = function() {
+    },
+    loginPage: function() {
       var button, forgottenPassword;
       $('table[id!="table"]').hide();
       button = this.replaceSubmitButton({
@@ -57,8 +56,8 @@
       $("tr:eq(0) .help:first", this.mainForm).remove();
       forgottenPassword = $("a:last").text("Forgot your password?");
       return $("tr:eq(1)", this.mainForm).append($("<td/>").addClass("help").append(forgottenPassword));
-    };
-    Styler.prototype.normalPage = function() {
+    },
+    normalPage: function() {
       var button, randomForm, weeks;
       this.setupFilter();
       button = this.replaceSubmitButton({
@@ -81,8 +80,8 @@
       this.addTopAreaStuff();
       randomForm = $('<form action="timeworked.php"></form>');
       return $('body').prepend(randomForm);
-    };
-    Styler.prototype.replaceSubmitButton = function(_arg) {
+    },
+    replaceSubmitButton: function(_arg) {
       var button, replacing, selector, text, _ref;
       _ref = _arg != null ? _arg : {}, selector = _ref.selector, text = _ref.text;
             if (selector != null) {
@@ -104,8 +103,8 @@
         value: text
       });
       return button;
-    };
-    Styler.prototype.addTopAreaStuff = function() {
+    },
+    addTopAreaStuff: function() {
       var date, item, links, match, name, navigation, options, selector, title, _i, _j, _len, _len2, _ref, _ref2;
       title = $('.title:first');
       match = /(.+) - Week commencing (.+)/.exec(title.text());
@@ -155,8 +154,8 @@
       $("h2").after(navigation);
       this.mainArea.append(options);
       return $('#table tr:last td:eq(1)').append(links.choices).append(links.copy).wrapInner($("<span/>").addClass("links"));
-    };
-    Styler.prototype.createWeeks = function() {
+    },
+    createWeeks: function() {
       var greytext, href, weeks;
       weeks = $('table:last').detach().attr({
         id: 'weeks',
@@ -181,8 +180,8 @@
         return el.text(text);
       });
       return weeks;
-    };
-    Styler.prototype.setupFilter = function() {
+    },
+    setupFilter: function() {
       var activityOptions;
       $('form select').parent().parent().prepend('<td><input class="filter-text" type="text"/></td>');
       $('form tr:eq(0)').prepend('<td></td>');
@@ -227,8 +226,7 @@
           return _results;
         }
       });
-    };
-    return Styler;
-  })();
-  styler = new Styler().start();
+    }
+  };
+  styler.start();
 }).call(this);
