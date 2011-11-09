@@ -50,7 +50,8 @@
   $('#table td').removeAttr('width');
   inputTd = $('input[name="submitu"]').parent();
   $('input[name="submitu"]').remove();
-  submitButton = $('<input id="submit-button" type="button" name="submitu" value="Update" onclick="updated()return true">').click(function() {
+  submitButton = $('<input id="submit-button" type="button" name="submitu" value="Update" onclick="updated()return true">');
+  submitButton.click(function() {
     return $('form[name=theform]').submit();
   });
   $('#mainarea').append(submitButton);
