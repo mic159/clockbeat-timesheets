@@ -108,7 +108,34 @@
       var date, item, links, match, name, navigation, options, selector, title, _i, _j, _len, _len2, _ref, _ref2;
       title = $('.title:first');
       match = /(.+) - Week commencing (.+)/.exec(title.text());
-      date = match[2].replace('Jan', 'January').replace('Feb', 'February').replace('Mar', 'March').replace('Apr', 'April').replace('Jun', 'June').replace('Jul', 'July').replace('Aug', 'August').replace('Sep', 'September').replace('Oct', 'October').replace('Nov', 'November').replace('Dec', 'December');
+      date = match[2].replace(/(J(?:an|u(?:n|l))|Feb|Mar|Apr|Aug|Sep|Oct|Nov|Dec)/, function(m) {
+        switch (m) {
+          case 'Jan':
+            return 'January';
+          case 'Feb':
+            return 'February';
+          case 'Mar':
+            return 'March';
+          case 'Apr':
+            return 'April';
+          case 'Jun':
+            return 'June';
+          case 'Jul':
+            return 'July';
+          case 'Aug':
+            return 'August';
+          case 'Sep':
+            return 'September';
+          case 'Oct':
+            return 'October';
+          case 'Nov':
+            return 'November';
+          case 'Dec':
+            return 'December';
+          default:
+            return m;
+        }
+      });
       this.mainArea.prepend("<h1>Timesheet for " + match[1] + "</h1><h2>" + date + "</h2>");
       title.remove();
       links = {

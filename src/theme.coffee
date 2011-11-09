@@ -114,18 +114,20 @@ styler =
         # Move the title
         title = $('.title:first')
         match = /(.+) - Week commencing (.+)/.exec title.text()
-        date = match[2]
-            .replace('Jan', 'January')
-            .replace('Feb', 'February')
-            .replace('Mar', 'March')
-            .replace('Apr', 'April')
-            .replace('Jun', 'June')
-            .replace('Jul', 'July')
-            .replace('Aug', 'August')
-            .replace('Sep', 'September')
-            .replace('Oct', 'October')
-            .replace('Nov', 'November')
-            .replace('Dec', 'December')
+        date = match[2].replace /(J(?:an|u(?:n|l))|Feb|Mar|Apr|Aug|Sep|Oct|Nov|Dec)/, (m) ->
+            switch m
+                when 'Jan' then 'January'
+                when 'Feb' then 'February'
+                when 'Mar' then 'March'
+                when 'Apr' then 'April'
+                when 'Jun' then 'June'
+                when 'Jul' then 'July'
+                when 'Aug' then 'August'
+                when 'Sep' then 'September'
+                when 'Oct' then 'October'
+                when 'Nov' then 'November'
+                when 'Dec' then 'December'
+                else m
             
         @mainArea.prepend("<h1>Timesheet for #{match[1]}</h1><h2>#{date}</h2>")
         title.remove()
