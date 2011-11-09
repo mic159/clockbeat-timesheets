@@ -14,7 +14,8 @@ a:hover {
     color: #999;
 }
 
-p a[href="suggestion.php"] {
+p {
+    /* <p> tags only seemed to be used for annoying things */
     display:none;
 }
 
@@ -43,6 +44,11 @@ select {
 
 table, hr {
     display:none;
+}
+
+td.help {
+    color:black;
+    font-weight:bold;
 }
 
 #mainarea {
