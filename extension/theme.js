@@ -1,106 +1,259 @@
 (function() {
-  var activityOptions, calendarButton, choicesLink, copyLink, date, helpLink, inputTd, logoffLink, match, nextLink, optionsLink, prevLink, printLink, randomForm, submitButton, title;
-  if ($('input[name="login_user"]').length > 0) {
-    $("table").css({
-      display: "block"
-    });
-    return;
-  }
-  $('form select').parent().parent().prepend('<td><input class="filter-text" type="text"/></td>');
-  $('form tr:eq(0)').prepend('<td></td>');
-  $('form tr:eq(1)').prepend('<td>Filter</td>');
-  $('form tr:last').prepend('<td></td>');
-  activityOptions = void 0;
-  $('.filter-text').keyup(function() {
-    var current, el, grandparent, option, options, select, term, terms, _i, _len, _results;
-    if (!(activityOptions != null)) {
-      activityOptions = $("<option/>");
-      activityOptions.append($('select:first').children().clone());
-    }
-    el = $(this);
-    grandparent = el.parent().parent();
-    select = $('select:first', grandparent).first();
-    current = select.val();
-    select.children().remove();
-    select.append(activityOptions.children().clone());
-    select.val(current);
-    options = select.children();
-    terms = el.val().toLowerCase().split(/\W/).filter(function(n) {
-      return n !== '';
-    });
-    if (terms.length > 0) {
+  var styler;
+  var __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; }, __hasProp = Object.prototype.hasOwnProperty;
+  styler = {
+    start: function() {
+      this.common();
+      if ($('input[name="login_user"]').length > 0) {
+        this.loginPage();
+      } else {
+        this.normalPage();
+      }
+      return $("table", this.mainArea).css({
+        display: "block"
+      });
+    },
+    common: function() {
+      var id, _i, _len, _ref, _results;
+      $('hr').remove();
+      $('style').html('');
+      $('table').removeAttr('cellpadding').removeAttr('bgcolor');
+      $('form table').attr({
+        id: 'table'
+      }).wrap($("<div/>").attr({
+        id: "mainarea"
+      }));
+      this.mainArea = $("#mainarea");
+      this.mainTable = $("#table");
+      this.mainForm = this.mainArea.parent();
+      $("td", this.mainTable).removeAttr('width').removeAttr('style');
+      $('p:last').remove();
+      _ref = ["lblToday", "caption"];
       _results = [];
-      for (_i = 0, _len = options.length; _i < _len; _i++) {
-        option = options[_i];
-        option = $(option);
-        _results.push((function() {
-          var _j, _len2, _results2;
-          _results2 = [];
-          for (_j = 0, _len2 = terms.length; _j < _len2; _j++) {
-            term = terms[_j];
-            if (option.text().toLowerCase().indexOf(term) < 0) {
-              option.remove();
-              break;
-            }
-          }
-          return _results2;
-        })());
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        id = _ref[_i];
+        _results.push($('body').append($("<div/>").hide().attr({
+          id: id
+        })));
       }
       return _results;
+    },
+    loginPage: function() {
+      var button, forgottenPassword;
+      $('table[id!="table"]').hide();
+      button = this.replaceSubmitButton({
+        text: "Login",
+        selector: 'input[name="submit"]'
+      });
+      button.click(__bind(function() {
+        return this.mainForm.submit();
+      }, this));
+      this.mainArea.prepend($("<h1/>").text("TimeSheet Logon")).append(button);
+      $("tr:eq(2), tr:eq(3)", this.mainForm).remove();
+      $("input[type=text], input[type=password]", this.mainForm).css({
+        width: "90%"
+      });
+      $("tr:eq(0) .help:first", this.mainForm).remove();
+      forgottenPassword = $("a:last").text("Forgot your password?");
+      return $("tr:eq(1)", this.mainForm).append($("<td/>").addClass("help").append(forgottenPassword));
+    },
+    normalPage: function() {
+      var button, randomForm, weeks;
+      this.setupFilter();
+      button = this.replaceSubmitButton({
+        text: "Update",
+        selector: 'input[name="submitu"]'
+      });
+      button.click(__bind(function() {
+        updated();
+        return this.mainForm.submit();
+      }, this));
+      weeks = this.createWeeks();
+      weeks.wrap($("<div/>").addClass("portion").css({
+        width: "90%"
+      }));
+      button.wrap($("<div/>").addClass("portion").css({
+        width: "10%"
+      }));
+      this.utilities = $("<div/>").addClass("utilities");
+      this.mainArea.append(this.utilities.append(button.parent()).append(weeks.parent()));
+      this.addTopAreaStuff();
+      randomForm = $('<form action="timeworked.php"></form>');
+      return $('body').prepend(randomForm);
+    },
+    replaceSubmitButton: function(_arg) {
+      var button, replacing, selector, text, _ref;
+      _ref = _arg != null ? _arg : {}, selector = _ref.selector, text = _ref.text;
+            if (selector != null) {
+        selector;
+      } else {
+        selector = 'input[name="submitu"]';
+      };
+      replacing = $(selector);
+            if (text != null) {
+        text;
+      } else {
+        text = replacing.text();
+      };
+      replacing.remove();
+      button = $("<input/>").attr({
+        id: "submit-button",
+        type: "submit",
+        name: "submitu",
+        value: text
+      });
+      return button;
+    },
+    addTopAreaStuff: function() {
+      var date, item, links, match, name, navigation, options, selector, title, _i, _j, _len, _len2, _ref, _ref2;
+      title = $('.title:first');
+      match = /(.+) - Week commencing (.+)/.exec(title.text());
+      date = match[2].replace(/(J(?:an|u(?:n|l))|Feb|Mar|Apr|Aug|Sep|Oct|Nov|Dec)/, function(m) {
+        switch (m) {
+          case 'Jan':
+            return 'January';
+          case 'Feb':
+            return 'February';
+          case 'Mar':
+            return 'March';
+          case 'Apr':
+            return 'April';
+          case 'Jun':
+            return 'June';
+          case 'Jul':
+            return 'July';
+          case 'Aug':
+            return 'August';
+          case 'Sep':
+            return 'September';
+          case 'Oct':
+            return 'October';
+          case 'Nov':
+            return 'November';
+          case 'Dec':
+            return 'December';
+          default:
+            return m;
+        }
+      });
+      this.mainArea.prepend("<h1>Timesheet for " + match[1] + "</h1><h2>" + date + "</h2>");
+      title.remove();
+      links = {
+        choices: 'table:eq(2) a:eq(2)',
+        options: '.notonprint',
+        calendar: 'input[type=image]',
+        help: 'a[target=helpwin]',
+        prev: 'table:eq(3) a:eq(0)',
+        next: 'table:eq(3) a:eq(1)',
+        copy: 'table:eq(3) a:eq(2)',
+        print: 'table:eq(3) a:eq(3)',
+        logoff: "<a>Logoff</a>"
+      };
+      for (name in links) {
+        if (!__hasProp.call(links, name)) continue;
+        selector = links[name];
+        links[name] = $(selector);
+      }
+      links.prev.text('Last week');
+      links.next.text('Next week');
+      links.logoff.attr({
+        href: "/auth.php/logoff.php"
+      });
+      links.choices.text(links.choices.text().replace('(', '').replace(')', '').replace('choices', 'activities'));
+      options = $("<div/>").attr({
+        id: "options",
+        "class": "links"
+      });
+      _ref = ['options', 'help', 'print', 'logoff'];
+      for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+        item = _ref[_i];
+        options.append(links[item]);
+      }
+      navigation = $("<div/>").attr({
+        id: "navigation",
+        "class": "links"
+      });
+      _ref2 = ['prev', 'calendar', 'next'];
+      for (_j = 0, _len2 = _ref2.length; _j < _len2; _j++) {
+        item = _ref2[_j];
+        navigation.append(links[item]);
+      }
+      $("h2").after(navigation);
+      this.mainArea.append(options);
+      return $('#table tr:last td:eq(1)').append(links.choices).append(links.copy).wrapInner($("<span/>").addClass("links"));
+    },
+    createWeeks: function() {
+      var greytext, href, weeks;
+      weeks = $('table:last').detach().attr({
+        id: 'weeks',
+        cellspacing: 0,
+        cellpadding: 0
+      });
+      greytext = $(".greytxt", weeks);
+      href = greytext.attr('href');
+      greytext.replaceWith($("<a/>").attr({
+        href: href
+      }).addClass("nolink child").text(greytext.text()));
+      $('a', weeks).addClass('child');
+      $('td.oktxt', weeks).addClass('child').css({
+        fontSize: ""
+      });
+      $('.child', weeks).each(function() {
+        var el, match, text;
+        el = $(this);
+        text = el.text().replace('.00', '').replace('-', '0');
+        match = /(\d+).(\w+).([\d\.]+)/.exec(text);
+        text = "" + match[1] + " " + match[2] + " (" + match[3] + ")";
+        return el.text(text);
+      });
+      return weeks;
+    },
+    setupFilter: function() {
+      var activityOptions;
+      $('form select').parent().parent().prepend('<td><input class="filter-text" type="text"/></td>');
+      $('form tr:eq(0)').prepend('<td></td>');
+      $('form tr:eq(1)').prepend('<td>Filter</td>');
+      $('form tr:last').prepend('<td></td>');
+      activityOptions = void 0;
+      return $('.filter-text').keyup(function() {
+        var current, el, grandparent, option, options, select, term, terms, _i, _len, _results;
+        if (!(activityOptions != null)) {
+          activityOptions = $("<option/>");
+          activityOptions.append($('select:first').children().clone());
+        }
+        el = $(this);
+        grandparent = el.parent().parent();
+        select = $('select:first', grandparent).first();
+        current = select.val();
+        select.children().remove();
+        select.append(activityOptions.children().clone());
+        select.val(current);
+        options = select.children();
+        terms = el.val().toLowerCase().split(/\W/).filter(function(n) {
+          return n !== '';
+        });
+        if (terms.length > 0) {
+          _results = [];
+          for (_i = 0, _len = options.length; _i < _len; _i++) {
+            option = options[_i];
+            option = $(option);
+            _results.push((function() {
+              var _j, _len2, _results2;
+              _results2 = [];
+              for (_j = 0, _len2 = terms.length; _j < _len2; _j++) {
+                term = terms[_j];
+                if (option.text().toLowerCase().indexOf(term) < 0) {
+                  option.remove();
+                  break;
+                }
+              }
+              return _results2;
+            })());
+          }
+          return _results;
+        }
+      });
     }
-  });
-  $('style').html('');
-  $('hr').remove();
-  $('table').removeAttr('cellpadding').removeAttr('bgcolor');
-  $('form table').attr('id', 'table').wrap('<div id="mainarea"></div>');
-  $('#table td').removeAttr('width');
-  inputTd = $('input[name="submitu"]').parent();
-  $('input[name="submitu"]').remove();
-  submitButton = $('<input id="submit-button" type="button" name="submitu" value="Update" onclick="updated();return true">').click(function() {
-    return $('form[name=theform]').submit();
-  });
-  $('#mainarea').append(submitButton);
-  $('table:last td').removeAttr('style');
-  $('#mainarea').append($('table:last').attr('id', 'weeks').attr('cellspacing', 0).attr('cellpadding', 0));
-  $('#weeks .greytxt').html('<span class="nolink child">' + $('#weeks .greytxt').text() + '</span>');
-  $('#weeks a').addClass('child');
-  $('#weeks .child').each(function() {
-    var match, text;
-    text = $(this).text().replace('.00', '').replace('-', '0');
-    match = /(\d+).(\w+).([\d\.]+)/.exec(text);
-    text = "" + match[1] + " " + match[2] + " (" + match[3] + ")";
-    return $(this).text(text);
-  });
-  $('p:last').remove();
-  title = $('.title:first');
-  match = /(.+) - Week commencing (.+)/.exec(title.text());
-  date = match[2].replace('Jan', 'January').replace('Feb', 'February').replace('Mar', 'March').replace('Apr', 'April').replace('Jun', 'June').replace('Jul', 'July').replace('Aug', 'August').replace('Sep', 'September').replace('Oct', 'October').replace('Nov', 'November').replace('Dec', 'December');
-  $('#mainarea').prepend("<h1>Timesheet for " + match[1] + "</h1><h2>" + date + "</h2>");
-  title.remove();
-  choicesLink = $('table:eq(2) a:eq(2)');
-  optionsLink = $('.notonprint');
-  calendarButton = $('input[type=image]');
-  helpLink = $('a[target=helpwin]');
-  prevLink = $('table:eq(3) a:eq(0)');
-  nextLink = $('table:eq(3) a:eq(1)');
-  copyLink = $('table:eq(3) a:eq(2)');
-  printLink = $('table:eq(3) a:eq(3)');
-  logoffLink = $("<a>Logoff</a>").attr({
-    href: "/auth.php/logoff.php"
-  });
-  choicesLink.text(choicesLink.text().replace('(', '').replace(')', '').replace('choices', 'activities'));
-  prevLink.text('Last week');
-  nextLink.text('Next week');
-  $('#mainarea').append('<div id="options" class="links"></div>');
-  $('#options').append(optionsLink).append(helpLink).append(printLink).append(logoffLink);
-  $('h2').after('<div id="navigation" class="links"></div>');
-  $('#navigation').append(prevLink).append(calendarButton).append(nextLink);
-  $('#table tr:last td:eq(1)').append(choicesLink).append(copyLink).wrapInner('<span class="links"></span>');
-  $('table:eq(2)').remove();
-  $('table:eq(2)').remove();
-  randomForm = $('<form action="timeworked.php"></form>');
-  $('body').prepend(randomForm);
-  $("table").css({
-    display: "block"
-  });
+  };
+  styler.start();
 }).call(this);
