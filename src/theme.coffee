@@ -124,3 +124,7 @@ $('table:eq(2)').remove()
 # Action on the body element that fails if the main form isn't second
 randomForm = $ '<form action="timeworked.php"></form>'
 $('body').prepend(randomForm)
+
+# Finally, show the main table
+# jQuery complains when I use .show or .fadeIn :(
+$("table").css display:"block"

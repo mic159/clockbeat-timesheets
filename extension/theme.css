@@ -13,6 +13,11 @@ a:hover {
     text-decoration: underline;
     color: #999;
 }
+
+p a[href="suggestion.php"] {
+    display:none;
+}
+
 td, p {
     font-size: 13px;
 }
@@ -35,6 +40,11 @@ td.weekday input, td.weekend input {
 select {
     padding-right: 2px;
 }
+
+table, hr {
+    display:none;
+}
+
 #mainarea {
     background-color: #FBF7E9;
     background: -webkit-linear-gradient(#FBF7E9, #EBE3D4) repeat scroll 0 0 transparent;

@@ -91,4 +91,7 @@
   $('table:eq(2)').remove();
   randomForm = $('<form action="timeworked.php"></form>');
   $('body').prepend(randomForm);
+  $("table").css({
+    display: "block"
+  });
 }).call(this);
