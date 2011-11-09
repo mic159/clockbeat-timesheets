@@ -62,9 +62,9 @@ $('#table td').removeAttr('width')
 inputTd = $('input[name="submitu"]').parent()
 $('input[name="submitu"]').remove()
 
-submitButton = $('<input id="submit-button" type="button" name="submitu" value="Update" onclick="updated()return true">')
-submitButton.click ->
-    $('form[name=theform]').submit()
+submitButton = $('<input id="submit-button" type="button" name="submitu" value="Update" onclick="updated();return true">')
+    .click ->
+        $('form[name=theform]').submit()
     
 $('#mainarea').append submitButton
 $('table:last td').removeAttr('style')
