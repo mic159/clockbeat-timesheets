@@ -46,11 +46,6 @@ table, hr {
     display:none;
 }
 
-td.help {
-    color:black;
-    font-weight:bold;
-}
-
 #mainarea {
     background-color: #FBF7E9;
     background: -webkit-linear-gradient(#FBF7E9, #EBE3D4) repeat scroll 0 0 transparent;
@@ -72,14 +67,14 @@ td.help {
 .filter-text {
     width: 100px;
 }
-input[type="button"]:hover {
+input[type="submit"]:hover {
     -webkit-transition-duration: 0.5s;
     -webkit-transition-property: background-color;
     -moz-transition-duration: 0.5s;
     -moz-transition-property: background-color;
     background-color: #DDD7C6;
 }
-input[type="button"] {
+input[type="submit"] {
     -webkit-transition-duration: 0.5s;
     -webkit-transition-property: background-color;
     -moz-transition-duration: 0.5s;
@@ -89,13 +84,16 @@ input[type="button"] {
     padding: 5px 25px;
 }
 #weeks {
-    margin: 20px auto 0;
+    height:28px;
+    float:left
     background-color: #F4F1E2;
     border: 1px solid #bbb;
     border-radius: 3px;
+    margin:auto;
+    margin-top:2px;
 }
-#weeks .child {
-    padding: 4px 8px;
+#weeks .child, #weeks td.oktxt {
+    padding: 5px 8px;
     background-color: #F4F1E2;
     -webkit-transition-duration: 0.5s;
     -webkit-transition-property: background-color;
@@ -124,6 +122,13 @@ input[type="button"] {
 }
 #weeks .nolink {
     color: #999;
+}
+.utilities {
+    height:28px;
+    margin-top:20px;
+}
+.portion {
+    float:left;
 }
 h1 {
     font-size: 17px;
