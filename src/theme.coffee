@@ -1,3 +1,10 @@
+if $('input[name="login_user"]').length > 0
+    # It would seem this is a login page
+    # Coffeescript wraps this all in a function
+    # So a return statement will prevent everything else running
+    $("table").css display:"block"
+    return
+
 ## Create the filter textbox.
 $('form select').parent().parent().prepend('<td><input class="filter-text" type="text"/></td>')
 
@@ -103,13 +110,14 @@ prevLink = $('table:eq(3) a:eq(0)')
 nextLink = $('table:eq(3) a:eq(1)')
 copyLink = $('table:eq(3) a:eq(2)')
 printLink = $('table:eq(3) a:eq(3)')
+logoffLink = $("<a>Logoff</a>").attr href:"/auth.php/logoff.php"
 
 choicesLink.text(choicesLink.text().replace('(','').replace(')','').replace('choices', 'activities'))
 prevLink.text('Last week')
 nextLink.text('Next week')
 
 $('#mainarea').append('<div id="options" class="links"></div>')
-$('#options').append(optionsLink).append(helpLink).append(printLink)
+$('#options').append(optionsLink).append(helpLink).append(printLink).append(logoffLink)
 
 # Construct a navigation segment
 $('h2').after('<div id="navigation" class="links"></div>')
