@@ -64,8 +64,9 @@
         text: "Update",
         selector: 'input[name="submitu"]'
       });
-      button.click(__bind(function() {
-        updated();
+      button.attr({
+        onclick: "updated();"
+      }).click(__bind(function() {
         return this.mainForm.submit();
       }, this));
       weeks = this.createWeeks();
@@ -79,7 +80,10 @@
       this.mainArea.append(this.utilities.append(button.parent()).append(weeks.parent()));
       this.addTopAreaStuff();
       randomForm = $('<form action="timeworked.php"></form>');
-      return $('body').prepend(randomForm);
+      $('body').prepend(randomForm);
+      return $("td > input, td > select", this.mainForm).attr({
+        onChange: ""
+      });
     },
     replaceSubmitButton: function(_arg) {
       var button, replacing, selector, text, _ref;

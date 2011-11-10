@@ -68,8 +68,7 @@ styler =
         
         # Create submit button
         button = @replaceSubmitButton text:"Update", selector:'input[name="submitu"]'
-        button.click =>
-            updated()
+        button.attr(onclick:"updated();").click =>
             @mainForm.submit()
         
         # Create weeks table
@@ -89,6 +88,9 @@ styler =
         # Action on the body element that fails if the main form isn't second
         randomForm = $ '<form action="timeworked.php"></form>'
         $('body').prepend(randomForm)
+        
+        # Make it so that editing the table doesn't do annoying things
+        $("td > input, td > select", @mainForm ).attr onChange:""
         
     replaceSubmitButton: ({selector, text}={}) ->
         selector ?= 'input[name="submitu"]'
