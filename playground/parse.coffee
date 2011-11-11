@@ -2,11 +2,17 @@
 
 fs = require 'fs'
 jsdom = require 'jsdom'
+    
+# Set Underscore as a global
+global._ = require("underscore")._
+
+# Add some methods to built in objects
+require '../extension/libraries/iefixes'
 
 loadTestPage = (cb, {context}={}) ->
   jsdom.env
     html: 'page.html'
-    scripts: ['../extension/jquery.js']
+    scripts: ['../extension/libraries/jquery.js']
     done: (errors, window) ->
       cb.call context, window, window.$
 
@@ -14,5 +20,6 @@ if module.parent
   exports.loadTestPage = loadTestPage
 else
   # Loaded as a script
-  {scrape} = require '../src/parse'
-  loadTestPage scrape
+  {makeScraper} = require '../src/parse'
+  loadTestPage (window, $) ->
+    makeScraper(window, $).start()
