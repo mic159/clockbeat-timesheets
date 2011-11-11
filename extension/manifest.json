@@ -11,7 +11,7 @@
   	        "http://timesheet.clockbeat.com/auth.php/logoff*"
   	    ],
   	  "css": ["theme.css"],
-  	  "js": ["libraries/jquery.js", "theme.js"]
+  	  "js": ["libraries/jquery.js", "parse.js", "theme.js"]
     }
   ],
   "icons": {

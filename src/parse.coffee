@@ -48,14 +48,19 @@ makeScraper = (window, $) ->
     ########################
     
     get_activities: ->
-        # Need the second last script element
-        scripts = $("script")
-        code = $(scripts[scripts.length-2]).html().replace /, ddproj/g, ', ""'
+        # Seems that nodejs thinks the desired script tag is second last
+        # But browser says the actual last one....
+        code = $("script:last")
+        if code.html().length is 0
+            scripts = $("script")
+            code = $(scripts[scripts.length-2])
+        
+        javascript = code.html().replace /, ddproj/g, ', ""'
 
         info = eval """
           (function() {
               biggercomment=function(){}; 
-              #{code};
+              #{javascript};
               return {ddproj:ddproj, ddboxes:ddboxes, myproj:myproj}
           })()
         """
