@@ -1,7 +1,9 @@
 describe 'Scraping', ->
+    ########################
+    #   TITLE
+    ########################
+    
     describe "Title", ->
-        scraper.get_title()
-            
         it "should get correct title", ->
             result = jasmine.createSpy 'result'
             fakeExtractTitle = spyOn(scraper, 'extractTitle').andReturn result
@@ -39,3 +41,67 @@ describe 'Scraping', ->
                     original:title
                     name: name
                     date: "03 October 2009"
+                    
+    ########################
+    #   ACTIVITIES/ENTRIES
+    ########################
+                    
+    describe "Activities", ->
+        extractedInfo = 
+            ddproj: [
+                [ '', '', 'x' ]
+                [ '430025', 'AD001 Admin P', '' ]
+                [ '512053', 'AD016 Training', '' ]
+                [ '490364', 'BM001 P', '' ]
+                [ '490366', 'BM002 SI', '' ]
+                [ '504370', 'DV010 PU', '' ]
+                [ '561313', 'DV015 BPU', '' ]
+                [ '430031', 'MT001 MP', '' ]
+                [ '430033', 'MT002 MD', '' ]
+                [ '120010', 'ZZ001 Annual leave', '' ]
+                [ '120012', 'ZZ002 Sick leave', '' ]
+                [ '120014', 'ZZ003 Other leave', '' ]
+                ]
+            ddboxes: [
+                [ 'theform', 'Project0', '504370', "" ]
+                [ 'theform', 'Project1', '512053', "" ]
+                [ 'theform', 'Project2', '120014', "" ]
+                [ 'theform', 'Project3', '', "" ]
+                [ 'theform', 'Project4', '', "" ]
+                [ 'theform', 'Project5', '', "" ]
+                ]
+            myproj: [
+                [ '504370', 'DV010 PU', '' ]
+                [ '512053', 'AD016 Training', '' ]
+                [ '120014', 'ZZ003 Other leave', '' ]
+                ]
+        
+        it "should get correct activities", ->
+            entries = jasmine.createSpy 'entries'
+            activities = jasmine.createSpy 'activites'
+            fakeExtractActivities = spyOn(scraper, 'extractActivities').andReturn {entries, activities}
+            
+            scraper.get_activities()
+            
+            expect(fakeExtractActivities).toHaveBeenCalledWith extractedInfo
+            expect(scraper.entries).toBe entries
+            expect(scraper.activities).toBe activities
+        
+        it "should make entries to be a list of nonempty keys from ddboxes", ->
+            {entries} = scraper.extractActivities extractedInfo
+            expect(entries).toEqual ['504370', '512053', '120014']
+        
+        it "should make activities to be a map of keys to activity name", ->
+            {activities} = scraper.extractActivities extractedInfo
+            expect(activities).toEqual 
+                '120010': 'ZZ001 Annual leave'
+                '120012': 'ZZ002 Sick leave'
+                '120014': 'ZZ003 Other leave'
+                '430025': 'AD001 Admin P'
+                '430031': 'MT001 MP'
+                '430033': 'MT002 MD'
+                '490364': 'BM001 P'
+                '490366': 'BM002 SI'
+                '504370': 'DV010 PU'
+                '512053': 'AD016 Training'
+                '561313': 'DV015 BPU'

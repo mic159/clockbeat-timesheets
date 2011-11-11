@@ -51,6 +51,33 @@ do (exports) ->
       ########################
       
       get_activities: ->
+        # Need the second last script element
+        scripts = $("script")
+        code = $(scripts[scripts.length-2]).html().replace /, ddproj/g, ', ""'
+        
+        info = eval """
+          (function() {
+            biggercomment=function(){}; 
+            #{code};
+            return {ddproj:ddproj, ddboxes:ddboxes, myproj:myproj}
+          })()
+        """
+        
+        {@activities, @entries} = @extractActivities info
+      
+      extractActivities: (info) ->
+        entries = []
+        activities = {}
+        
+        for [key, name] in info.ddproj
+            if key isnt ""
+                activities[key] = name
+        
+        for [a, b, key] in info.ddboxes
+            if key isnt ""
+                entries.push key
+        
+        {activities, entries}
             
       ########################
       #   DAYS
