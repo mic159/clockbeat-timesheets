@@ -1,0 +1,437 @@
+<html>
+<head>
+</head>
+<body>
+
+<table width='100%'>
+  <tr><td width='100%' class='title'>SomeGuy - Week commencing 07 Nov 2011</td>
+    <td><BR><BR><BR>
+</td>
+    <td class='title'>Company Inc<script language='Javascript' >window.setTimeout('checkLogo();', 10);</script>
+</td>
+  </tr>
+  <tr>
+    <td>
+      <a class='notonprint' href='options.php'>Options</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <a href='../help/timeworked_help.html' target='helpwin' >Help</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <span class='arch'>Current&nbsp;choices&nbsp;
+        <a href='?archivestate=1'>(Show&nbsp;archived&nbsp;choices)</a>
+      </span>
+    </td>
+    <td></td>
+    <td></td>
+  </tr>
+</table>
+
+<hr size=1 noshade>
+
+<table border=0>
+  <tr>
+    <form action='timeworked.php'>
+      <td>
+        <a href='timeworked.php?start=1320062400&name=624967' >&lt;Previous</a>
+      </td>
+      <td>&nbsp;&nbsp;
+        <input type='hidden' name='name' value='624967'>
+      </td>
+      <td>
+        <input type='hidden' name='gotodate' value='07 Nov 2011' >
+        <input type='image' src='../images/calbutton.gif' onclick="showCalendar(this, document.forms[0].gotodate, 'dd mmm yyyy','en',1);return false;" >
+      </td>
+      <td>&nbsp;&nbsp;</td>
+      <td>
+        <a href='timeworked.php?start=1321272000&name=624967' >Next&gt;</a>
+      </td>
+      <td>&nbsp;&nbsp;</td>
+      <td>
+        <a href='timeworked.php?carryforward=1&start=1320667200&name=624967'>Copy previous activities</a>
+      </td>
+      <td>&nbsp;&nbsp;</td>
+      <td>
+        <a href='print.php?start=1320667200&name=624967'>Print</a>
+      </td>
+      <td>&nbsp;&nbsp;</td>
+    </form>
+  </tr>
+</table>
+
+<form method="POST" name="theform" action="timeworked.php">
+  <input type="hidden" name="state" value="first">
+
+  <table border='0' cellspacing='0' cellpadding='1' bgcolor='#FFFFFF' width='100%'>
+    <tr>
+      <td></td>
+      <td align='right'>&nbsp;&nbsp;</td>
+      <td class='weekday' nowrap>07 Nov</td>
+      <td class='weekday' nowrap>08 Nov</td>
+      <td class='weekday' nowrap>09 Nov</td>
+      <td class='weekday' nowrap>10 Nov</td>
+      <td class='weekday' nowrap>11 Nov</td>
+      <td class='weekend' nowrap>12 Nov</td>
+      <td class='weekend' nowrap>13 Nov</td>
+      <td class='weekend'></td>
+    </tr>
+    <tr>
+      <td>Activity</td>
+      <td>Comment&nbsp;&nbsp;&nbsp;
+        <span class='linklike' title="Expand" onclick="biggercomment();">&gt;&gt;&gt;</span>
+      </td>
+      <td  class='weekday'>Mon</td>
+      <td  class='weekday'>Tue</td>
+      <td  class='weekday'>Wed</td>
+      <td  class='weekday'>Thu</td>
+      <td  class='weekday'>Fri</td>
+      <td  class='weekend'>Sat</td>
+      <td  class='weekend'>Sun</td>
+      <td class='weekend'></td>
+    </tr>
+    <tr>
+      <td>
+        <input type='hidden' name='lineunique0' value='662820'>
+        <input type='hidden' name='OldProject0' value='504370'>
+        <select name='Project0' onChange='recordChange();setselstyles();'></select>
+      </td>
+      <td>
+        <input type='hidden' name='OldTask0' value=''>
+        <input type='text' name='Task0' value='' maxlength='80' size='20' onChange='recordChange();'>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day0Hours0' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay0Hours0' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day1Hours0' value=8.00 onChange='recordChange();'>
+        <input type='hidden' name='OldDay1Hours0' value=8.00>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day2Hours0' value=8.00 onChange='recordChange();'>
+        <input type='hidden' name='OldDay2Hours0' value=8.00>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day3Hours0' value=8.00 onChange='recordChange();'>
+        <input type='hidden' name='OldDay3Hours0' value=8.00>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day4Hours0' value=8.00 onChange='recordChange();'>
+        <input type='hidden' name='OldDay4Hours0' value=8.00>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day5Hours0' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay5Hours0' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day6Hours0' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay6Hours0' value=''>
+      </td>
+      <td class='weekend' style='text-align: right; padding-right: 5px;'>32.00</td>
+    </tr>
+    <tr>
+      <td>
+        <input type='hidden' name='lineunique1' value='662938'>
+        <input type='hidden' name='OldProject1' value='512053'>
+        <select name='Project1' onChange='recordChange();setselstyles();'></select>
+      </td>
+      <td>
+        <input type='hidden' name='OldTask1' value=''>
+        <input type='text' name='Task1' value='' maxlength='80' size='20' onChange='recordChange();'>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day0Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay0Hours1' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day1Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay1Hours1' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day2Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay2Hours1' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day3Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay3Hours1' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day4Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay4Hours1' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day5Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay5Hours1' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day6Hours1' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay6Hours1' value=''>
+      </td>
+      <td class='weekend' style='text-align: right; padding-right: 5px;'>0.00</td>
+    </tr>
+    <tr>
+      <td>
+        <input type='hidden' name='lineunique2' value='662940'>
+        <input type='hidden' name='OldProject2' value='120014'>
+        <select name='Project2' onChange='recordChange();setselstyles();'></select>
+      </td>
+      <td>
+        <input type='hidden' name='OldTask2' value='Jury Duty'>
+        <input type='text' name='Task2' value='Jury Duty' maxlength='80' size='20' onChange='recordChange();'>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day0Hours2' value=8.00 onChange='recordChange();'>
+        <input type='hidden' name='OldDay0Hours2' value=8.00>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day1Hours2' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay1Hours2' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day2Hours2' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay2Hours2' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day3Hours2' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay3Hours2' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day4Hours2' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay4Hours2' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day5Hours2' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay5Hours2' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day6Hours2' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay6Hours2' value=''>
+      </td>
+      <td class='weekend' style='text-align: right; padding-right: 5px;'>8.00</td>
+    </tr>
+    <tr>
+      <td>
+        <input type='hidden' name='lineunique3' value=''>
+        <input type='hidden' name='OldProject3' value=''>
+        <select name='Project3' onChange='recordChange();setselstyles();'></select>
+      </td>
+      <td>
+        <input type='hidden' name='OldTask3' value=''>
+        <input type='text' name='Task3' value='' maxlength='80' size='20' onChange='recordChange();'>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day0Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay0Hours3' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day1Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay1Hours3' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day2Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay2Hours3' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day3Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay3Hours3' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day4Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay4Hours3' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day5Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay5Hours3' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day6Hours3' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay6Hours3' value=''>
+      </td>
+      <td class='weekend' style='text-align: right; padding-right: 5px;'>0.00</td>
+    </tr>
+    <tr>
+      <td>
+        <input type='hidden' name='lineunique4' value=''>
+        <input type='hidden' name='OldProject4' value=''>
+        <select name='Project4' onChange='recordChange();setselstyles();'></select>
+      </td>
+      <td>
+        <input type='hidden' name='OldTask4' value=''>
+        <input type='text' name='Task4' value='' maxlength='80' size='20' onChange='recordChange();'>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day0Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay0Hours4' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day1Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay1Hours4' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day2Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay2Hours4' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day3Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay3Hours4' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day4Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay4Hours4' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day5Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay5Hours4' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day6Hours4' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay6Hours4' value=''>
+      </td>
+      <td class='weekend' style='text-align: right; padding-right: 5px;'>0.00</td>
+      </tr><tr><td>
+        <input type='hidden' name='lineunique5' value=''>
+        <input type='hidden' name='OldProject5' value=''>
+        <select name='Project5' onChange='recordChange();setselstyles();'></select>
+      </td>
+      <td>
+        <input type='hidden' name='OldTask5' value=''>
+        <input type='text' name='Task5' value='' maxlength='80' size='20' onChange='recordChange();'>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day0Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay0Hours5' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day1Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay1Hours5' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day2Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay2Hours5' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day3Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay3Hours5' value=''>
+      </td>
+      <td class='weekday' width='10%'>
+        <input type='text' size='4' name='Day4Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay4Hours5' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day5Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay5Hours5' value=''>
+      </td>
+      <td class='weekend' width='10%' >
+        <input type='text' size='4' name='Day6Hours5' value='' onChange='recordChange();'>
+        <input type='hidden' name='OldDay6Hours5' value=''>
+      </td>
+      <td class='weekend' style='text-align: right; padding-right: 5px;'>0.00</td>
+    </tr>
+    <tr>
+      <td>
+        <input type='image' src='../images/rollovers/update_0.gif' 
+          name='submitu' value='Update' onclick='updated();return true;' 
+          onmouseover='this.src="../images/rollovers/update_1.gif"' 
+          onmouseout='this.src="../images/rollovers/update_0.gif"' >
+        <script type='text/javascript'>
+        var myimage = new Image();
+        myimage.src = '../images/rollovers/update_1.gif';
+        </script>
+      </td>
+      <td><b>40.00</b></td>
+      <td class='weekday'>8.00</td>
+      <td class='weekday'>8.00</td>
+      <td class='weekday'>8.00</td>
+      <td class='weekday'>8.00</td>
+      <td class='weekday'>8.00</td>
+      <td class='weekend'>0.00</td>
+      <td class='weekend'>0.00</td>
+      <td class='weekend'></td>
+    </tr>
+  </table>
+  <input type='hidden' name='start' value='1320667200'>
+  <input type='hidden' name='linecount' value='6'>
+  <input type='hidden' name='name' value='624967'>
+  <input type='hidden' name='scriptdone' value='0'>
+</form>
+<script language='javascript'>
+
+var ddproj = [
+    ["", "", "x"]
+  , ["430025", "AD001 Admin P", ""]
+  , ["512053", "AD016 Training", ""]
+  , ["490364", "BM001 P", ""]
+  , ["490366", "BM002 SI", ""]
+  , ["504370", "DV010 PU", ""]
+  , ["561313", "DV015 BPU", ""]
+  , ["430031", "MT001 MP", ""]
+  , ["430033", "MT002 MD", ""]
+  , ["120010", "ZZ001 Annual leave", ""]
+  , ["120012", "ZZ002 Sick leave", ""]
+  , ["120014", "ZZ003 Other leave", ""]
+  ];
+  
+var ddboxes = [
+    ["theform", "Project0", "504370", ddproj]
+  , ["theform", "Project1", "512053", ddproj]
+  , ["theform", "Project2", "120014", ddproj]
+  , ["theform", "Project3", "", ddproj]
+  , ["theform", "Project4", "", ddproj]
+  , ["theform", "Project5", "", ddproj]
+  ];
+  
+var myproj = [
+    ["504370", "DV010 PU", ""]
+  , ["512053", "AD016 Training", ""]
+  , ["120014", "ZZ003 Other leave", ""]
+  ];
+  
+  biggercomment(20 + 3);
+</script>
+
+<div class="footnote"></div>
+<BR><BR><hr size=1 noshade>
+<table>
+  <tr>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1316433600&name=624967' >&nbsp;19&nbsp;Sep&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1317038400&name=624967' >&nbsp;26&nbsp;Sep&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1317643200&name=624967' >&nbsp;03&nbsp;Oct&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1318248000&name=624967' >&nbsp;10&nbsp;Oct&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1318852800&name=624967' >&nbsp;17&nbsp;Oct&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1319457600&name=624967' >&nbsp;24&nbsp;Oct&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td style='font-size: 7pt; color: #808080; text-align: right;' >
+      <a class='oktxt' href='timeworked.php?start=1320062400&name=624967' >&nbsp;31&nbsp;Oct&nbsp;<BR>
+        <span style='color: grey;'>40.00&nbsp;</span>
+      </a>
+    </td>
+    <td class='greytxt' style='font-size: 7pt; border: solid 1px #808080; text-align: right;'' >
+      &nbsp;07&nbsp;Nov&nbsp;<BR>40.00&nbsp;
+    </td>
+  </tr>
+</table><!-- © Steve Holt 2000-2001 -->
+<hr size=1 noshade>
+  <p align='right' style='font-style: italic; font-size: 7pt; color: #a0a0a0'>
+    <a href='suggestion.php'><img src='../images/suggestion.gif' align='top' style='border: none;'>
+  </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Version 2.4 © Steve Holt 2000-2010</p>
+</body>
+</html>
