@@ -105,3 +105,19 @@ describe 'Scraping', ->
                 '504370': 'DV010 PU'
                 '512053': 'AD016 Training'
                 '561313': 'DV015 BPU'
+    ########################
+    #   DAYS
+    ########################
+    
+    describe "Days", ->
+        it "should get dates for this week", ->
+            scraper.get_days()
+            expect(scraper.days).toEqual [
+                "07 Nov" 
+                "08 Nov" 
+                "09 Nov" 
+                "10 Nov" 
+                "11 Nov" 
+                "12 Nov" 
+                "13 Nov"
+            ]

@@ -86,6 +86,11 @@ makeScraper = (window, $) ->
     ########################
     
     get_days: ->
+        daysRow = $("form[name=theform] tr:eq(0)")
+        @days = for day in $("td.weekday, td.weekend", daysRow)
+            txt = $(day).text()
+            if txt.length is 0 then continue
+            txt
           
     ########################
     #   INTERESTING LINKS
