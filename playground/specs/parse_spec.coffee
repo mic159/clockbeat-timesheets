@@ -105,6 +105,7 @@ describe 'Scraping', ->
                 '504370': 'DV010 PU'
                 '512053': 'AD016 Training'
                 '561313': 'DV015 BPU'
+                
     ########################
     #   DAYS
     ########################
@@ -121,3 +122,39 @@ describe 'Scraping', ->
                 "12 Nov" 
                 "13 Nov"
             ]
+            
+    ########################
+    #   LINKS
+    ########################
+    
+    describe "Links", ->
+        it "should get href and text for some of the more important links on the page", ->
+            scraper.get_links()
+            expect(scraper.links).toEqual
+                logoff:
+                    href: '/auth.php/logoff.php'
+                    text: 'Log off'
+                choices:
+                    href: '?archivestate=1'
+                    text: '(Show archived choices)'
+                options:
+                    href: 'options.php'
+                    text: 'Options'
+                calendar:
+                    href: ''
+                    text: ''
+                help: 
+                    href: '../help/timeworked_help.html'
+                    text: 'Help'
+                prev: 
+                    href: 'timeworked.php?start=1320062400&name=624967'
+                    text: 'Last Week'
+                next: 
+                    href: 'timeworked.php?start=1321272000&name=624967'
+                    text: 'Next Week'
+                copy: 
+                    href: 'timeworked.php?carryforward=1&start=1320667200&name=624967'
+                    text: 'Copy previous activities'
+                print:
+                    href: 'print.php?start=1320667200&name=624967'
+                    text: 'Print'

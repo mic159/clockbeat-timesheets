@@ -97,7 +97,26 @@ makeScraper = (window, $) ->
     ########################
     
     get_links: ->
+        selectors = 
+            choices: 'table:eq(2) a:eq(2)'
+            options: '.notonprint'
+            calendar: 'input[type=image]'
+            help: 'a[target=helpwin]'
+            prev: 'table:eq(3) a:eq(0)'
+            next: 'table:eq(3) a:eq(1)'
+            copy: 'table:eq(3) a:eq(2)'
+            print: 'table:eq(3) a:eq(3)'
         
+        @links = links =
+            logoff: {href:"/auth.php/logoff.php", text:"Log off"}
+            
+        for own name, selector of selectors
+            next = $ selector
+            links[name] = {href:next.attr("href"), text:next.text()}
+        
+        links.prev.text = "Last Week"
+        links.next.text = "Next Week"
+        links
           
     ########################
     #   WEEKS
