@@ -158,3 +158,40 @@ describe 'Scraping', ->
                 print:
                     href: 'print.php?start=1320667200&name=624967'
                     text: 'Print'
+            
+    ########################
+    #   LINKS
+    ########################
+    
+    describe 'Weeks', ->
+        extracted = [
+            ' 19 Sep \n        40.00 \n      '
+            ' 26 Sep \n        40.00 \n      '
+            ' 03 Oct \n        40.00 \n      '
+            ' 10 Oct \n        40.00 \n      '
+            ' 17 Oct \n        40.00 \n      '
+            ' 24 Oct \n        40.00 \n      '
+            ' 31 Oct \n        40.00 \n      '
+            '\n       07 Nov 40.00 \n    '
+            ]
+  
+        it "should get correct weeks", ->
+            result = jasmine.createSpy 'result'
+            fakeExtractWeeks = spyOn(scraper, 'extractWeeks').andReturn result
+            
+            scraper.get_weeks()
+            expect(fakeExtractWeeks).toHaveBeenCalledWith extracted
+            expect(scraper.weeks).toBe result
+  
+        it "should extract day, month and hours from the weeks", ->
+            weeks = scraper.extractWeeks extracted
+            expect(weeks).toEqual [
+                [ '19', 'Sep', '40' ]
+                [ '26', 'Sep', '40' ]
+                [ '03', 'Oct', '40' ]
+                [ '10', 'Oct', '40' ]
+                [ '17', 'Oct', '40' ]
+                [ '24', 'Oct', '40' ]
+                [ '31', 'Oct', '40' ]
+                [ '07', 'Nov', '40' ]
+                ]

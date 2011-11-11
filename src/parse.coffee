@@ -123,6 +123,24 @@ makeScraper = (window, $) ->
     ########################
     
     get_weeks: ->
+        # Get the weeks in their current form
+        weeks = $('table:last')
+        
+        # Add 'child' class where necessary
+        $('a', weeks).addClass 'child'
+        $('td.oktxt', weeks).addClass 'child'
+        $(".greytxt", weeks).addClass "child"
+        
+        # Extract the weeks and hours for those weeks
+        info = ($(c).text() for c in $(".child", weeks))
+        @weeks = @extractWeeks info
+    
+    extractWeeks: (weeks) ->
+        # Return list of (day, month, hours)
+        for week in weeks
+            text = week.replace('.00', '').replace('-', '0').replace(/\s+/g, ' ')
+            match = /(\d+).(\w+).([\d\.]+)/.exec text
+            [match[1], match[2], match[3]]
           
 ########################
 #   EXPORT
