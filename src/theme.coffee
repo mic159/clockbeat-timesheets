@@ -1,4 +1,43 @@
 ########################
+#   COUNTER HELPER
+########################
+
+class Counter
+    constructor: (@$total, @$days, @$tasks) ->
+        @total = 0
+        @dayTotals = (0 for day in [0..7])
+        @taskTotals = (0 for task in @$tasks)
+        
+        @cache = []
+        for task in @taskTotals
+            @cache.push (0 for day in [0..7])
+            
+        @clear()
+    
+    clear: ->
+        @$total.text ''
+        for day in @$days
+            $(day).text ''
+        
+        for task in @$tasks
+            $(task).text ''
+    
+    update: (task, day, value) ->
+        old = @cache[task][day]
+        @total -= old
+        @dayTotals[day] -= old
+        @taskTotals[task] -= old
+        
+        @cache[task][day] = value
+        @total += value
+        @dayTotals[day] += value
+        @taskTotals[task] += value
+        
+        @$total.text @total
+        $(@$days[day]).text @dayTotals[day]
+        $(@$tasks[task]).text @taskTotals[task]
+        
+########################
 #   STYLER HELPER
 ########################
 
@@ -26,12 +65,39 @@ styler =
         @scraper.templates = templates
         
         @load 'templates/base.jade', @scraper
-        $(".timesheet").fadeIn()
         
         @timesheet = $(".timesheet")
-        
         @setupFilter()
+        @setupCounter()
+        @fillInTimeSheet()
         @setupCommentButton()
+        
+        $(".timesheet").fadeIn()
+    
+    setupCounter: ->
+        @counterTotal = $("td.all.total span", @timesheet)
+        @counterDays = $("td.day.total span", @timesheet)
+        @counterTasks = $("td.task.total span", @timesheet)
+        @counter = new Counter @counterTotal, @counterDays, @counterTasks
+    
+    fillInTimeSheet: ->
+        for entry, index in @scraper.entries
+            $("select:eq(#{index})", @timesheet).val entry
+        
+        for values, num in @scraper.values[0...index]
+            tr = $("tr.values:eq(#{num})", @timesheet)
+            
+            comment = values[0]
+            if comment.length > 0
+                commentTr = tr.next()
+                $("input", commentTr).val comment
+                commentTr.show()
+            
+            for day, place in $(".day", tr)
+                value = values[place+1]
+                if value.length > 0
+                    @counter.update num, place, Number(value)
+                    $(day).val value
     
     setupCommentButton: ->
         $("button.makecomment", @timesheet).click ->
