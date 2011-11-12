@@ -10,7 +10,7 @@
   	        "http://timesheet.clockbeat.com/auth.php/timeworked*",
   	        "http://timesheet.clockbeat.com/auth.php/logoff*"
   	    ],
-  	  "css": ["theme.css"],
+  	  "css": ["theme.stylus.css"],
   	  "js": [
             "libraries/underscore.js", "libraries/iefixes.js", "libraries/jquery.js", "libraries/jade.js",
             "templates.js", "parse.js", "theme.js"

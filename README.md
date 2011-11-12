@@ -14,17 +14,15 @@ Development
 -----------
 
 You'll need to install node.js and npm (https://github.com/joyent/node/wiki/Installation and http://npmjs.org/)
-Then you'll need coffeescript, coffeejade and watch:
+Then you'll need coffeescript, coffeejade, stylus and watch:
 
-    sudo npm install coffeescript -g
+    sudo npm install coffeescript stylus -g
     npm install watch
     git clone https://github.com/fusesource/coffeejade
     cd coffeejade
     # Change commander in package.json to be version 0.3.2
     sudo npm install -g
 
-Compiling the coffeescript is done by executing coffee.sh. This will make coffee watch the src folder and compile any changes into the extension folder.
+To do all the transpiling of coffeescript, jade and stylus templates into the extension folder, just run "cake watch" from the root folder.
 
-Compiling the Jade templates is done by executing jade.sh, which will compile all the templates in the templates folder into a single javascript file in the extension folder.
-
-Alternatively, you can just execute "cake watch" from the root and when any of these files are changed, they are automatically transpiled for you.
+This will use the files found in bin to run the necessary commands when these files are changed.
