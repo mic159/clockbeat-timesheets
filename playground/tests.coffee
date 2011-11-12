@@ -1,4 +1,5 @@
 #!/usr/bin/env coffee
+require '../extension/libraries/iefixes'
 jasmine = require 'jasmine-node'
 {loadTestPage} = require './parse'
 {makeScraper} = require '../src/parse'

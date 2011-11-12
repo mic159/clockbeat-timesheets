@@ -82,6 +82,31 @@ makeScraper = (window, $) ->
         {activities, entries}
           
     ########################
+    #   VALUES
+    ########################
+    
+    get_values: ->
+        # Return list of [comment, mon, tue, wed, thur, fri, sat, sun] 
+        @values = []
+        for row in $("form[name=theform] tr")
+            inputs = $("input", row)
+            if inputs.length <= 1
+                # This row doesn't have any values
+                continue
+            
+            row = []
+            for input in inputs
+                input = $ input
+                name = input.attr 'name'
+                if name.startsWith("Task") or name.startsWith("Day")
+                    row.push input.val()
+            
+            if row.length > 0
+                @values.push row
+        
+        return
+          
+    ########################
     #   DAYS
     ########################
     
