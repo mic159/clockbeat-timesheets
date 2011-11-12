@@ -116,6 +116,7 @@ makeScraper = (window, $) ->
         
         links.prev.text = "Last Week"
         links.next.text = "Next Week"
+        links.choices.text = links.choices.text.replace("(", "").replace(")", "")
         links
           
     ########################

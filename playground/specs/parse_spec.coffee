@@ -136,7 +136,7 @@ describe 'Scraping', ->
                     text: 'Log off'
                 choices:
                     href: '?archivestate=1'
-                    text: '(Show archived choices)'
+                    text: 'Show archived choices'
                 options:
                     href: 'options.php'
                     text: 'Options'
