@@ -25,3 +25,5 @@ Then you'll need coffeescript and coffeejade:
 Compiling the coffeescript is done by executing coffee.sh. This will make coffee watch the src folder and compile any changes into the extension folder.
 
 Compiling the Jade templates is done by executing jade.sh, which will compile all the templates in the templates folder into a single javascript file in the extension folder.
+
+Alternatively, you can just execute "cake watch" from the root and when any of these files are changed, they are automatically transpiled for you.
