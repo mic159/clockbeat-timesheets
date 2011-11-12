@@ -132,15 +132,18 @@ makeScraper = (window, $) ->
         $(".greytxt", weeks).addClass "child"
         
         # Extract the weeks and hours for those weeks
-        info = ($(c).text() for c in $(".child", weeks))
+        info = for c in $(".child", weeks)
+            c = $(c)
+            [c.text(), c.attr 'href']
+            
         @weeks = @extractWeeks info
     
     extractWeeks: (weeks) ->
         # Return list of (day, month, hours)
-        for week in weeks
+        for [week, href] in weeks
             text = week.replace('.00', '').replace('-', '0').replace(/\s+/g, ' ')
             match = /(\d+).(\w+).([\d\.]+)/.exec text
-            [match[1], match[2], match[3]]
+            [match[1], match[2], match[3], href]
           
 ########################
 #   EXPORT

@@ -165,14 +165,14 @@ describe 'Scraping', ->
     
     describe 'Weeks', ->
         extracted = [
-            ' 19 Sep \n        40.00 \n      '
-            ' 26 Sep \n        40.00 \n      '
-            ' 03 Oct \n        40.00 \n      '
-            ' 10 Oct \n        40.00 \n      '
-            ' 17 Oct \n        40.00 \n      '
-            ' 24 Oct \n        40.00 \n      '
-            ' 31 Oct \n        40.00 \n      '
-            '\n       07 Nov 40.00 \n    '
+            [' 19 Sep \n        40.00 \n      ', 'timeworked.php?start=1316433600&name=624967']
+            [' 26 Sep \n        40.00 \n      ', 'timeworked.php?start=1317038400&name=624967']
+            [' 03 Oct \n        40.00 \n      ', 'timeworked.php?start=1317643200&name=624967']
+            [' 10 Oct \n        40.00 \n      ', 'timeworked.php?start=1318248000&name=624967']
+            [' 17 Oct \n        40.00 \n      ', 'timeworked.php?start=1318852800&name=624967']
+            [' 24 Oct \n        40.00 \n      ', 'timeworked.php?start=1319457600&name=624967']
+            [' 31 Oct \n        40.00 \n      ', 'timeworked.php?start=1320062400&name=624967']
+            ['\n       07 Nov 40.00 \n    ', '']
             ]
   
         it "should get correct weeks", ->
@@ -186,12 +186,12 @@ describe 'Scraping', ->
         it "should extract day, month and hours from the weeks", ->
             weeks = scraper.extractWeeks extracted
             expect(weeks).toEqual [
-                [ '19', 'Sep', '40' ]
-                [ '26', 'Sep', '40' ]
-                [ '03', 'Oct', '40' ]
-                [ '10', 'Oct', '40' ]
-                [ '17', 'Oct', '40' ]
-                [ '24', 'Oct', '40' ]
-                [ '31', 'Oct', '40' ]
-                [ '07', 'Nov', '40' ]
+                [ '19', 'Sep', '40', 'timeworked.php?start=1316433600&name=624967']
+                [ '26', 'Sep', '40', 'timeworked.php?start=1317038400&name=624967']
+                [ '03', 'Oct', '40', 'timeworked.php?start=1317643200&name=624967']
+                [ '10', 'Oct', '40', 'timeworked.php?start=1318248000&name=624967']
+                [ '17', 'Oct', '40', 'timeworked.php?start=1318852800&name=624967']
+                [ '24', 'Oct', '40', 'timeworked.php?start=1319457600&name=624967']
+                [ '31', 'Oct', '40', 'timeworked.php?start=1320062400&name=624967']
+                [ '07', 'Nov', '40', '']
                 ]
