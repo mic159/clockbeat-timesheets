@@ -1,51 +1,58 @@
 .main
-    .titles
-        h1 Timesheet for #{title.name}
-        h2= title.date
-    .navigation
-        ul.links
-            - for link in ['options', 'help', 'print', 'logoff']
+    .header.container
+        .titles
+            h1 Timesheet for #{title.name} - #{title.date}
+                
+        ul.actions
+            - for link in ['copy', 'choices']
                 li: a(href=links[link].href)= links[link].text
-        ul.timetravel
-            li: a(href=links.next.href)= links[link].text
-            li(style="display:none"): a(id="calendar")
-            li: a(href=links.prev.href)= links.prev.text
+                
+        div.clearing &nbsp;
+        
+        .navigation
+            ul.links
+                - for link in ['help', 'print', 'options', 'logoff']
+                    li: a(href=links[link].href)= links[link].text
+            ul.timetravel
+                li: a(href=links.prev.href)= links.prev.text
+                li(style="display:none"): a(id="calendar")
+                li: a(href=links.next.href)= links.next.text
+                
+        div.clearing &nbsp;
     
-    .form
-        table
-            thead
-                tr
-                    td
-                    td
-                    td
-                    - for day in days
-                        td= day
-                    td 
-                tr
-                    - for header in ['Filter', 'Activity', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                        th= header
-            tbody
-                - number = entries.length + 3
-                - for index in [0..number]
-                    != templates["templates/row.jade"]({index, days, activities})
-                tr
-                    td
-                    td: span.links
-                        - for link in ['choices', 'copy']
-                            a(href=links[link].href)= links[link].text
+    .timesheet
+        form(method="POST", name="theform", action="timeworked.php").container
+            table
+                thead
+                    tr
+                        td
+                        td
+                        td
+                        - for day in days
+                            td.date= day
+                        td 
+                    tr
+                        - for header in ['Filter', 'Activity', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            th= header
+                tbody
+                    - number = entries.length + 3
+                    - for index in [0..number]
+                        != templates["templates/row.jade"]({index, days, activities})
+                    tr
+                        td
+                        td      
+                        td.all.total: span &nbsp;
                             
-                    td.all.total
-                        
-                    - for day in days
-                        td.col.total
-    .utility
-        .submit
-            input(type="submit", name="submitu", value="Update")#submit.button
-        .weeks
-            ul
-                - for [day, month, total, href] in weeks
-                    li
-                        - if href
-                            a(href=href)= "#{day} #{month} (#{total})"
-                        - else
-                            span.nolink #{day} #{month} (#{total})
+                        - for day in days
+                            td.col.total: span &nbsp;
+            .utility
+                .submit
+                    input(type="submit", name="submitu", value="Update")#submit.button
+                table.weeks
+                    tr
+                        - for [day, month, total, href] in weeks
+                            td
+                                - if href
+                                    a(href=href).child= "#{day} #{month} (#{total})"
+                                - else
+                                    span.child.nolink #{day} #{month} (#{total})

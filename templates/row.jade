@@ -13,9 +13,10 @@ tr
         td: input(type="text", name="Day#{num}Hours#{index}", size="4").day
         - num += 1
 
-    td: span.row.total
+    td.row.total: span &nbsp;
+    
 tr.comment
-    td: label Comment
+    th Comment
     td(colspan="9")
         input(type="text", name="Task#{index}")
     td

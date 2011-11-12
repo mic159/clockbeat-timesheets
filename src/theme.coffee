@@ -71,14 +71,19 @@ styler =
         scraper.templates = templates
         html = templates["templates/base.jade"](scraper)
         $("body").html html
-        $("table").css display:"block"
-        $(".form button.makecomment").click ->
+        
+        $("table, form").css display:"block"
+        $(".timesheet").fadeIn()
+        
+        $(".timesheet button.makecomment").click ->
             comment = $(this).parent().parent().next()
             if comment.is(":visible")
                 if $("input", comment).val().length is 0
                     comment.hide()
             else
                 comment.show()
+            
+            false
     
     oldNormalPage: ->
         @setupFilter()
