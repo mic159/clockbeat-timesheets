@@ -14,9 +14,10 @@ Development
 -----------
 
 You'll need to install node.js and npm (https://github.com/joyent/node/wiki/Installation and http://npmjs.org/)
-Then you'll need coffeescript and coffeejade:
+Then you'll need coffeescript, coffeejade and watch:
 
     sudo npm install coffeescript -g
+    npm install watch
     git clone https://github.com/fusesource/coffeejade
     cd coffeejade
     # Change commander in package.json to be version 0.3.2
