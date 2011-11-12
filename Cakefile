@@ -16,5 +16,5 @@ task 'watch', ->
     
     watch.createMonitor 'src', (monitor) ->
         monitor.on "changed", (f) ->
-            if f[-7..] == '.stylus'
+            if f[-7..] == '.styl'
                 runStylus()

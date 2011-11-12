@@ -1,2 +1,2 @@
 #!/bin/sh
-stylus -o extension src/*.stylus
+stylus -o extension src
