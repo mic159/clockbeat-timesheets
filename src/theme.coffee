@@ -4,18 +4,17 @@
 
 styler =
     start: ->
-        @common()
-        
         if $('input[name="login_user"]').length > 0
             # It would seem this is a login page
+            @common()
             @loginPage()
+            $("table", @mainArea).css display:"block"
         else
             # Any other page
             @normalPage()
-        
-        # Finally, show the main table
-        # jQuery complains when I use .show or .fadeIn :(
-        $("table", @mainArea).css display:"block"
+            #@common()
+            #@oldNormalPage()
+            #$("table", @mainArea).css display:"block"
         
     common: ->
         # Remove current CSS and ugly hrs
@@ -64,6 +63,24 @@ styler =
         $("tr:eq(1)", @mainForm).append $("<td/>").addClass("help").append forgottenPassword
     
     normalPage: ->
+        scraper = makeScraper window, $
+        scraper.start()
+        $("head, script, body").empty()
+        $("body").attr onload:""
+        
+        scraper.templates = templates
+        html = templates["templates/base.jade"](scraper)
+        $("body").html html
+        $("table").css display:"block"
+        $(".form button.makecomment").click ->
+            comment = $(this).parent().parent().next()
+            if comment.is(":visible")
+                if $("input", comment).val().length is 0
+                    comment.hide()
+            else
+                comment.show()
+    
+    oldNormalPage: ->
         @setupFilter()
         
         # Create submit button

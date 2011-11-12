@@ -22,24 +22,18 @@ p {
 td, p {
     font-size: 13px;
 }
-input, select {
+input, select, .button {
     font-family: "Lucida Grande","Lucida Sans Unicode",Helvetica,Arial,Verdana,sans-serif;
     font-size: 13px;
 }
-select {
-    padding-right: 2px;
-    width: 420px;
-}
-input, select {
+input, select, .button {
+    background:white;
     border: 1px solid #DDDDDD;
     border-radius: 3px;
     padding: 2px 4px;
 }
 td.weekday input, td.weekend input {
     width: 40px;
-}
-select {
-    padding-right: 2px;
 }
 
 table, hr {
@@ -67,14 +61,14 @@ table, hr {
 .filter-text {
     width: 100px;
 }
-input[type="submit"]:hover {
+.button:hover {
     -webkit-transition-duration: 0.5s;
     -webkit-transition-property: background-color;
     -moz-transition-duration: 0.5s;
     -moz-transition-property: background-color;
     background-color: #DDD7C6;
 }
-input[type="submit"] {
+.button {
     -webkit-transition-duration: 0.5s;
     -webkit-transition-property: background-color;
     -moz-transition-duration: 0.5s;
@@ -120,7 +114,7 @@ input[type="submit"] {
     -moz-transition-duration: 0.5s;
     -moz-transition-property: background-color;
 }
-#weeks .nolink {
+.nolink {
     color: #999;
 }
 .utilities {
@@ -167,4 +161,8 @@ input[type=image]:hover {
     -webkit-transition-property: opacity;
     -moz-transition-duration: 0.5s;
     -moz-transition-property: opacity;
+}
+
+.form tr.comment {
+    display:none;
 }
