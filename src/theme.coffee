@@ -21,6 +21,13 @@ class Counter
         
         for task in @$tasks
             $(task).text ''
+            
+    setupInput: (input, select, num, place) ->
+        counter = this
+        $(input).change ->
+            number = Number $(this).val()
+            unless isNaN(number)
+                counter.update num, place, number
     
     update: (task, day, value) ->
         old = @cache[task][day]
@@ -98,6 +105,14 @@ styler =
                 if value.length > 0
                     @counter.update num, place, Number(value)
                     $(day).val value
+        
+        counter = @counter
+        for tr, num in $("tr.values", @timesheet)
+            select = $("select", tr)
+            for input, place in $(".day", tr)
+                @counter.setupInput input, select, num, place
+        
+        return
     
     setupCommentButton: ->
         $("button.makecomment", @timesheet).click ->
