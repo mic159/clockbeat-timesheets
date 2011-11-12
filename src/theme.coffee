@@ -3,7 +3,7 @@
 ########################
 
 class Counter
-    constructor: (@$total, @$days, @$tasks) ->
+    constructor: (@$total, @$days, @$tasks, @$week) ->
         @total = 0
         @dayTotals = (0 for day in [0..7])
         @taskTotals = (0 for task in @$tasks)
@@ -21,13 +21,33 @@ class Counter
         
         for task in @$tasks
             $(task).text ''
+        
+    changeWeek: (value) ->
+        v = @$week.text()
+        v = v.replace /\(\d+\)/, "(#{value})"
+        @$week.text v
             
     setupInput: (input, select, num, place) ->
         counter = this
         $(input).change ->
-            number = Number $(this).val()
+            el = $(this)
+            val = el.val()
+                
+            number = Number val
             unless isNaN(number)
+                el.removeClass 'error'
+                number = Math.round(number*100)/100
+                el.val number
                 counter.update num, place, number
+            else
+                el.addClass 'error'
+            
+            if val.length > 0
+                if select.val().length is 0
+                    select.addClass 'error'
+            else
+                if Number($(counter.$tasks[num]).text()) == 0
+                    select.removeClass 'error'
     
     update: (task, day, value) ->
         old = @cache[task][day]
@@ -40,9 +60,11 @@ class Counter
         @dayTotals[day] += value
         @taskTotals[task] += value
         
-        @$total.text @total
-        $(@$days[day]).text @dayTotals[day]
-        $(@$tasks[task]).text @taskTotals[task]
+        numOrNothing = (num) -> if num > 0 then Math.round(num*100)/100 else ''
+        @$total.text numOrNothing @total
+        @changeWeek Math.round(@total)
+        $(@$days[day]).text numOrNothing @dayTotals[day]
+        $(@$tasks[task]).text numOrNothing @taskTotals[task]
         
 ########################
 #   STYLER HELPER
@@ -85,7 +107,8 @@ styler =
         @counterTotal = $("td.all.total span", @timesheet)
         @counterDays = $("td.day.total span", @timesheet)
         @counterTasks = $("td.task.total span", @timesheet)
-        @counter = new Counter @counterTotal, @counterDays, @counterTasks
+        @counterWeek = $(".weeks .nolink", @timesheet)
+        @counter = new Counter @counterTotal, @counterDays, @counterTasks, @counterWeek
     
     fillInTimeSheet: ->
         for entry, index in @scraper.entries
@@ -134,7 +157,16 @@ styler =
             el = $(this)
             if $("option.blank", el).length is 0
                 el.append $("<option/>").addClass "blank"
+        
+        $("select").change ->
+            el = $(this)
+            if el.val().length > 0
+                el.removeClass 'error'
+            else
             
+                if Number($('.task.total span', el.parent().parent()).text()) > 0
+                    el.addClass 'error'
+                
         $('.filter-text').keyup ->
             if not activityOptions?
                 activityOptions = $ "<select/>"
