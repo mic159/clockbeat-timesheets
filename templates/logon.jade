@@ -1,0 +1,17 @@
+.main.logon
+    span(style="display:none")#calendar
+    form(action="timeworked.php", method="POST").main.container
+        table
+            thead
+                tr
+                    th Username
+                    th Password
+            tbody
+                tr
+                    td: input(type="text", name="login_user")
+                    td: input(name="login_pw", type="password")
+                tr
+                    td
+                    td: a(href="../selfserve.php") Forgot your password?
+                    
+        input(type="submit", name="submit", value="Logon").button

@@ -22,6 +22,8 @@ h2
     
 a
     color: #333
+    /* set to show once everything is setup */
+    display:none
     text-decoration: none
     
     &:hover
@@ -139,7 +141,7 @@ table, p, hr, form, .timesheet
     border-radius: 11px 11px 11px 11px
     box-shadow: 0 0 11px #898989
 
-form[name=theform]
+form.main
     max-width:1050px
     margin:auto
         
@@ -187,4 +189,14 @@ form[name=theform]
                 width:78px
             
         select
+            min-width:200px
             max-width:200px
+
+.logon
+    form
+        width:450px
+    table
+        float:left
+        margin-left:12px!important
+    input[name=submit]
+        padding:25px

@@ -2,7 +2,7 @@ tr
     td: input(type="text").filter-text
     td
         select(name="Project#{index}").activities
-            option
+            option.blank
             - for key, value of activities
                 option(value=key)= value
     
