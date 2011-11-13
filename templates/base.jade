@@ -1,0 +1,62 @@
+.main
+    .header.container
+        .titles
+            h1 Timesheet for #{title.name} - #{title.date}
+                
+        ul.actions
+            - for link in ['copy', 'choices']
+                li: a(href=links[link].href)= links[link].text
+                
+        .clearing &nbsp;
+        
+        .navigation
+            ul.links
+                - for link in ['help', 'print', 'options', 'logoff']
+                    li: a(href=links[link].href)= links[link].text
+            ul.timetravel
+                li: a(href=links.prev.href)= links.prev.text
+                li(style="display:none"): a(id="calendar")
+                li: a(href=links.next.href)= links.next.text
+                
+        .clearing &nbsp;
+    
+    .timesheet
+        form(method="POST", name="theform", action="timeworked.php").main.container
+            .hidden
+                - for name, value of hidden
+                    input(type="hidden", name=name, value=value)
+                    
+            table
+                thead
+                    tr
+                        td
+                        td
+                        td
+                        - for day in days
+                            td.date= day
+                        td 
+                    tr
+                        - for header in ['Filter', 'Activity', '', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                            th= header
+                tbody
+                    - number = entries.length + 3
+                    - for index in [0..number]
+                        != templates["templates/row.jade"]({index, days, selectOptions})
+                    tr
+                        td
+                        td      
+                        td.all.total: span &nbsp;
+                            
+                        - for day in days
+                            td.day.total: span &nbsp;
+            .utility
+                .submit
+                    input(type="submit", name="submitu", value="Update")#submit.button
+                table.weeks
+                    tr
+                        - for [day, month, total, href] in weeks
+                            td
+                                - if href
+                                    a(href=href).child= "#{day} #{month} (#{total})"
+                                - else
+                                    span.child.nolink #{day} #{month} (#{total})

@@ -10,3 +10,20 @@ Credits
 -------
 Big thanks go to [David Johnstone](http://davidjohnstone.net), who did most of the restyling.
 Here is his [original scripts](http://www.markitdown.net/view/0d60e424)
+
+Development
+-----------
+
+You'll need to install node.js and npm (https://github.com/joyent/node/wiki/Installation and http://npmjs.org/)
+Then you'll need coffeescript, coffeejade, stylus and watch:
+
+    sudo npm install coffeescript stylus -g
+    npm install watch
+    git clone https://github.com/fusesource/coffeejade
+    cd coffeejade
+    # Change commander in package.json to be version 0.3.2
+    sudo npm install -g
+
+To do all the transpiling of coffeescript, jade and stylus templates into the extension folder, just run "cake watch" from the root folder.
+
+This will use the files found in bin to run the necessary commands when these files are changed.

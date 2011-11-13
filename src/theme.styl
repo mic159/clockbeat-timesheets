@@ -1,0 +1,228 @@
+body
+    background: -moz-radial-gradient(#C9CEDD, #C9CEDD, #8E96AD) repeat scroll 0 0 transparent
+    background: -webkit-radial-gradient(#C9CEDD, #C9CEDD, #8E96AD) repeat scroll 0 0 transparent
+    font-family: "Lucida Grande","Lucida Sans Unicode",Helvetica,Arial,Verdana,sans-serif
+    font-size: 13px
+    margin:0
+    padding:10px
+
+table
+    font-size: 1em
+
+h1
+    font-size: 17px
+    margin-top: 0
+    margin-bottom: 2px
+    padding:5px
+    padding-bottom:0px
+
+h2
+    font-size: 14px
+    padding:5px
+    
+a
+    color: #333
+    /* set to show once everything is setup */
+    display:none
+    text-decoration: none
+    
+    &:hover
+        text-decoration: underline
+        color: #999
+
+table, p, hr, form, .timesheet
+    display:none
+
+.nolink
+    color: #999
+        
+.utility
+    max-width: 1000px
+    margin:auto
+    height:50px;
+    padding-top:15px
+    
+    .submit, .weeks
+        float:left
+    
+    .submit
+        width: 10%
+        
+    .weeks
+        width:90%
+        background-color: #F9F7F1
+        border: 1px solid #bbb
+        border-radius: 3px
+        margin:auto
+        margin-top:2px
+        
+    .weeks .child
+        display: block
+        text-decoration: none
+        padding: 5px 8px
+        background-color: #F9F7F1
+        -webkit-transition-duration: 0.5s
+        -webkit-transition-property: background-color
+        -moz-transition-duration: 0.5s
+        -moz-transition-property: background-color
+
+    .weeks td:first-child .child
+        border-top-left-radius: 3px
+        border-bottom-left-radius: 3px
+
+    .weeks td:last-child .child
+        border-top-right-radius: 3px
+        border-bottom-right-radius: 3px
+
+    .weeks a:hover
+        color: #333
+        background-color: #DDD7C6
+        -webkit-transition-duration: 0.5s
+        -webkit-transition-property: background-color
+        -moz-transition-duration: 0.5s
+        -moz-transition-property: background-color
+
+.clearing
+    clear:both
+    height:0px
+
+.button
+    cursor:hand
+    padding: 1px 10px
+    -webkit-transition-duration: 0.5s
+    -webkit-transition-property: background-color
+    -moz-transition-duration: 0.5s
+    -moz-transition-property: background-color
+    
+    &:hover
+        -webkit-transition-duration: 0.5s
+        -webkit-transition-property: background-color
+        -moz-transition-duration: 0.5s
+        -moz-transition-property: background-color
+        background-color: #DDD7C6
+
+.header
+    max-width:1200px
+    margin:auto
+    margin-bottom:20px
+    
+    ul
+        list-style: none
+        margin:0
+        
+        li
+            padding:5px
+    
+    .titles
+        float:left
+    
+    .navigation
+        float:left
+        
+        li
+            float:left
+    
+    .actions
+        float:right
+        padding:0
+        
+        li
+            float:right
+    
+    .links, .timetravel
+        padding:0
+        
+.container
+    padding:10px;
+    background-color: #FBF7E9
+    background: -webkit-linear-gradient(#FBF7E9, #EBE3D4) repeat scroll 0 0 transparent
+    background: -moz-linear-gradient(#FBF7E9, #EBE3D4) repeat scroll 0 0 transparent
+    border: 1px solid #82817B
+    border-radius: 11px 11px 11px 11px
+    box-shadow: 0 0 11px #898989
+
+form.main
+    max-width:1050px
+    margin:auto
+        
+    input, select, button
+        background-color: #F9F7F1
+        border: 1px solid #BBBBBB
+    
+    input[name=submitu]
+        padding: 8px 25px
+        border-top-left-radius: 3px
+        border-top-right-radius: 3px
+        border-bottom-left-radius: 3px
+        border-bottom-right-radius: 3px
+    
+    select.error, input.error
+        background-color: red
+        
+    table
+        max-width: 1000px
+        margin:auto
+        
+        tr.comment
+            display:none
+            
+            td
+                padding-right:4px
+                text-align:left
+            input
+                width:100%
+                margin-left:2px
+                
+        td
+            width:40px
+            text-align:center
+            vertical-align:middle
+            
+            input.day
+                text-align:center
+            
+            &.filter
+                max-width:100px
+                
+                input
+                    max-width: 98px
+                
+            &.total span
+                color:#787878
+                display:inline-block
+                width:55px
+                height:16px
+                padding: 0;
+                border-radius: 1px 1px 1px 1px
+                background: rgba(1,1,1,0.11)
+                border: 1px solid #BBBBBB
+                
+            &.all.total span
+                width:78px
+            
+        select
+            min-width:260px
+            max-width:260px
+
+.logon
+    width:450px
+    position:relative
+    margin:auto
+    height:100%
+    
+    form
+        width:450px
+        height:72px
+        position:absolute
+        top:30%
+        
+    table
+        float:left
+        margin-left:12px!important
+    input[name=submit]
+        padding:25px
+        margin-left:14px
+        border-top-left-radius: 3px
+        border-top-right-radius: 3px
+        border-bottom-left-radius: 3px
+        border-bottom-right-radius: 3px

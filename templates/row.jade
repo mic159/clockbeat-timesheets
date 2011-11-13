@@ -1,0 +1,19 @@
+tr.values
+    td.filter: input(type="text").filter-text
+    td
+        select(name="Project#{index}").activities!= selectOptions
+    
+    td: button.button.makecomment Comment
+    
+    - num = 0
+    - for day in days
+        td: input(type="text", name="Day#{num}Hours#{index}", size="4").day
+        - num += 1
+
+    td.task.total: span &nbsp;
+    
+tr.comment
+    th Comment
+    td(colspan="9")
+        input(type="text", name="Task#{index}")
+    td

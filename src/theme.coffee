@@ -1,244 +1,225 @@
 ########################
+#   COUNTER HELPER
+########################
+
+class Counter
+    constructor: (@$total, @$days, @$tasks, @$week) ->
+        @total = 0
+        @dayTotals = (0 for day in [0..7])
+        @taskTotals = (0 for task in @$tasks)
+        
+        @cache = []
+        for task in @taskTotals
+            @cache.push (0 for day in [0..7])
+            
+        @clear()
+    
+    clear: ->
+        @$total.text ''
+        for day in @$days
+            $(day).text ''
+        
+        for task in @$tasks
+            $(task).text ''
+        
+    changeWeek: (value) ->
+        v = @$week.text()
+        v = v.replace /\(\d+\)/, "(#{value})"
+        @$week.text v
+            
+    setupInput: (input, select, num, place) ->
+        counter = this
+        $(input).change ->
+            el = $(this)
+            val = el.val()
+                
+            number = Number val
+            unless isNaN(number)
+                el.removeClass 'error'
+                number = Math.round(number*100)/100
+                if number > 0
+                    el.val number
+                else
+                    el.val ''
+                counter.update num, place, number
+            else
+                el.addClass 'error'
+            
+            if val.length > 0 and (isNaN(number) or number > 0)
+                if select.val().length is 0
+                    select.addClass 'error'
+            else
+                if counter.taskTotals[num] == 0
+                    select.removeClass 'error'
+    
+    update: (task, day, value) ->
+        old = @cache[task][day]
+        @total -= old
+        @dayTotals[day] -= old
+        @taskTotals[task] -= old
+        
+        @cache[task][day] = value
+        @total += value
+        @dayTotals[day] += value
+        @taskTotals[task] += value
+        
+        numOrNothing = (num) -> if num > 0 then Math.round(num*100)/100 else ''
+        @$total.text numOrNothing @total
+        @changeWeek Math.round(@total)
+        $(@$days[day]).text numOrNothing @dayTotals[day]
+        $(@$tasks[task]).text numOrNothing @taskTotals[task]
+        
+########################
 #   STYLER HELPER
 ########################
 
 styler =
     start: ->
-        @common()
-        
         if $('input[name="login_user"]').length > 0
-            # It would seem this is a login page
             @loginPage()
         else
-            # Any other page
             @normalPage()
-        
-        # Finally, show the main table
-        # jQuery complains when I use .show or .fadeIn :(
-        $("table", @mainArea).css display:"block"
-        
-    common: ->
-        # Remove current CSS and ugly hrs
-        $('hr').remove()
-        $('style').html ''
-
-        # Modify main table.
-        $('table').removeAttr('cellpadding').removeAttr('bgcolor')
-        
-        $('form table').attr(id:'table').wrap $("<div/>").attr id:"mainarea"
-        
-        @mainArea = $ "#mainarea"
-        @mainTable = $ "#table"
-        @mainForm = @mainArea.parent()
-        $("td", @mainTable).removeAttr('width').removeAttr('style')
-
-        # Remove the "suggestion" footer
-        $('p:last').remove()
-        
-        # Make clockbeat javascript be quiet
-        for id in ["lblToday", "caption"]
-            $('body').append $("<div/>").hide().attr {id}
+    
+    load: (template, locals) ->
+        $("body, head, style").empty()
+        html = templates[template](locals)
+        $("body").html html
+        $("body").attr onload:""
+        $("table, form, a").css display:"block"
     
     loginPage: ->
-        $('table[id!="table"]').hide()
-        button = @replaceSubmitButton text:"Login", selector:'input[name="submit"]'
-        button.click =>
-            @mainForm.submit()
-        
-        # Add the button and a header
-        @mainArea
-            .prepend($("<h1/>").text "TimeSheet Logon")
-            .append(button)
-        
-        # Remove the random empty trs
-        $("tr:eq(2), tr:eq(3)", @mainForm).remove()
-        
-        # Extend the length of those inputs
-        $("input[type=text], input[type=password]", @mainForm).css width:"90%"
-        
-        # Remove random empty help td for login field
-        $("tr:eq(0) .help:first", @mainForm).remove()
-        
-        # Move forgottenPassword link
-        forgottenPassword = $("a:last").text "Forgot your password?"
-        $("tr:eq(1)", @mainForm).append $("<td/>").addClass("help").append forgottenPassword
+        @load 'templates/logon.jade'
+        $("input[name=login_user]").focus()
     
     normalPage: ->
-        @setupFilter()
+        @scraper = makeScraper window, $
+        @scraper.start()
         
-        # Create submit button
-        button = @replaceSubmitButton text:"Update", selector:'input[name="submitu"]'
-        button.attr(onclick:"updated();").click =>
-            @mainForm.submit()
+        @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
+        @scraper.templates = templates
         
-        # Create weeks table
-        weeks = @createWeeks()
+        @load 'templates/base.jade', @scraper
         
-        # Wrap button and weeks so I can line them up nicely
-        weeks.wrap $("<div/>").addClass("portion").css width:"90%"
-        button.wrap $("<div/>").addClass("portion").css width:"10%"
+        @timesheet = $(".timesheet")
+        @setupFilter @scraper.options
+        @setupCounter()
+        @fillInTimeSheet()
+        @setupCommentButton()
         
-        # Add submit button and weeks 
-        @utilities = $("<div/>").addClass "utilities"       
-        @mainArea.append @utilities.append(button.parent()).append(weeks.parent())
-        
-        # Add Top Area stuff
-        @addTopAreaStuff()
-        
-        # Action on the body element that fails if the main form isn't second
-        randomForm = $ '<form action="timeworked.php"></form>'
-        $('body').prepend(randomForm)
-        
-        # Make it so that editing the table doesn't do annoying things
-        $("td > input, td > select", @mainForm ).attr onChange:""
-        
-    replaceSubmitButton: ({selector, text}={}) ->
-        selector ?= 'input[name="submitu"]'
-        
-        # Get the button to replace and the current text it shows
-        replacing = $(selector)
-        text ?= replacing.text()
-        
-        # Remove the one we're replacing
-        replacing.remove()
-        
-        # Create a new submit button
-        button = $("<input/>").attr
-            id:"submit-button"
-            type:"submit"
-            name:"submitu"
-            value:text
-        
-        # return replacement
-        button
+        $(".timesheet").show()
     
-    addTopAreaStuff: ->
-        # Move the title
-        title = $('.title:first')
-        match = /(.+) - Week commencing (.+)/.exec title.text()
-        date = match[2].replace /(J(?:an|u(?:n|l))|Feb|Mar|Apr|Aug|Sep|Oct|Nov|Dec)/, (m) ->
-            switch m
-                when 'Jan' then 'January'
-                when 'Feb' then 'February'
-                when 'Mar' then 'March'
-                when 'Apr' then 'April'
-                when 'Jun' then 'June'
-                when 'Jul' then 'July'
-                when 'Aug' then 'August'
-                when 'Sep' then 'September'
-                when 'Oct' then 'October'
-                when 'Nov' then 'November'
-                when 'Dec' then 'December'
-                else m
+    setupCounter: ->
+        @counterTotal = $("td.all.total span", @timesheet)
+        @counterDays = $("td.day.total span", @timesheet)
+        @counterTasks = $("td.task.total span", @timesheet)
+        @counterWeek = $(".weeks .nolink", @timesheet)
+        @counter = new Counter @counterTotal, @counterDays, @counterTasks, @counterWeek
+    
+    fillInTimeSheet: ->
+        for entry, index in @scraper.entries
+            $("select:eq(#{index})", @timesheet).val entry
+        
+        for values, num in @scraper.values[0...index]
+            tr = $("tr.values:eq(#{num})", @timesheet)
             
-        @mainArea.prepend("<h1>Timesheet for #{match[1]}</h1><h2>#{date}</h2>")
-        title.remove()
-
-        # Get the various links at the top of the page which we want to move
-        links = 
-            choices: 'table:eq(2) a:eq(2)'
-            options: '.notonprint'
-            calendar: 'input[type=image]'
-            help: 'a[target=helpwin]'
-            prev: 'table:eq(3) a:eq(0)'
-            next: 'table:eq(3) a:eq(1)'
-            copy: 'table:eq(3) a:eq(2)'
-            print: 'table:eq(3) a:eq(3)'
-            logoff: "<a>Logoff</a>"
+            comment = values[0]
+            if comment.length > 0
+                commentTr = tr.next()
+                $("input", commentTr).val comment
+                commentTr.show()
+            
+            for day, place in $(".day", tr)
+                value = values[place+1]
+                if value.length > 0
+                    @counter.update num, place, Number(value)
+                    $(day).val value
         
-        for own name, selector of links
-            links[name] = $ selector
+        counter = @counter
+        for tr, num in $("tr.values", @timesheet)
+            select = $("select", tr)
+            for input, place in $(".day", tr)
+                @counter.setupInput input, select, num, place
         
-        links.prev.text 'Last week'
-        links.next.text 'Next week'
-        links.logoff.attr href:"/auth.php/logoff.php"
-        links.choices.text links.choices.text().replace('(','').replace(')','').replace('choices', 'activities')
-        
-        # Options area
-        options = $("<div/>").attr id:"options", class:"links"
-        for item in ['options', 'help', 'print', 'logoff']
-            options.append links[item]
-        
-        # Navigation area
-        navigation = $("<div/>").attr id:"navigation", class:"links"
-        for item in ['prev', 'calendar', 'next']
-            navigation.append links[item]
-        
-        # Put options and navigation into the dom
-        $("h2").after navigation
-        @mainArea.append options
-
-        # Put the activities links in the table
-        $('#table tr:last td:eq(1)').append(links.choices).append(links.copy).wrapInner($("<span/>").addClass "links")
+        return
     
-    createWeeks: ->
-        weeks = $('table:last').detach().attr
-            id:'weeks'
-            cellspacing:0
-            cellpadding:0
-        
-        # Replace the greytext
-        greytext = $(".greytxt", weeks)
-        href = greytext.attr 'href'
-        greytext.replaceWith $("<a/>").attr({href}).addClass("nolink child").text(greytext.text())
-        
-        # Change what each week displays
-        $('a', weeks).addClass('child')
-        $('td.oktxt', weeks).addClass('child').css fontSize:"" 
-        $('.child', weeks).each ->
-            el = $(this)
-            text = el.text().replace('.00', '').replace('-', '0')
-            match = /(\d+).(\w+).([\d\.]+)/.exec text
-            text = "#{match[1]} #{match[2]} (#{match[3]})"
-            el.text(text)
-        
-        # Finally, return
-        weeks
+    setupCommentButton: ->
+        $("button.makecomment", @timesheet).click ->
+            comment = $(this).parent().parent().next()
+            if comment.is(":visible")
+                if $("input", comment).val().length is 0
+                    comment.hide()
+            else
+                comment.show()
+            
+            false
     
-    setupFilter: ->
-        ## Create the filter textbox.
-        $('form select').parent().parent().prepend('<td><input class="filter-text" type="text"/></td>')
-
-        # Fix the table
-        $('form tr:eq(0)').prepend('<td></td>')
-        $('form tr:eq(1)').prepend('<td>Filter</td>')
-        $('form tr:last').prepend('<td></td>')
-
+    setupFilter: (options) ->
         # Add behaviour to the textbox.
+        scraper = @scraper
         activityOptions = undefined
-        $('.filter-text').keyup ->
-            if not activityOptions?
-                activityOptions = $ "<option/>"
-                activityOptions.append $('select:first').children().clone()
-                
+        
+        $("select").change ->
             el = $(this)
-            grandparent = el.parent().parent()
+            if el.val().length > 0
+                el.removeClass 'error'
+            else
+            
+                if Number($('.task.total span', el.parent().parent()).text()) > 0
+                    el.addClass 'error'
+                
+                
+        allSelectOptions = templates["templates/options.jade"]({options})
+        $('.filter-text').keyup ->                
+            el = $(this)
             
             # Determine the select element to edit
             # And the current option
+            grandparent = el.parent().parent()
             select = $('select:first', grandparent).first()
             current = select.val()
             
-            # Regenerate the list with all items.
-            select.children().remove()
-            select.append activityOptions.children().clone()
-            
-            # Reset selected option and get the options and terms
-            select.val current
-            options = select.children()
-            terms = el.val().toLowerCase().split(/\W/).filter (n) -> n != ''
-            
-            # Remove all items that don't match the filter.
-            if terms.length > 0
-                for option in options
-                    option = $(option)
-                    for term in terms
-                        if option.text().toLowerCase().indexOf(term) < 0
-                            option.remove()
-                            break
+            filter = el.val()
+            if filter.match /^\s*$/
+                # No filter, put in all the available options
+                select.html allSelectOptions
+                select.val current
+            else
+                # Create a regex from the filter
+                terms = filter.toLowerCase().split(/\W/).filter (n) -> n!= ''
+                regex = new RegExp "^.*#{terms.join '.*'}.*$", 'i'
+                
+                # Find all the options that apply to the filter
+                replacement = []
+                for info in options
+                    if info[0].match regex
+                        replacement.push info
+                
+                # Create and add the necessary options
+                select.html templates["templates/options.jade"]({options:replacement, bottomBlank:true})
 
 ########################
 #   BEGIN!
 ########################
 
-styler.start()
+# Remove the popupcalendarsub annoying thing
+listener = (e) ->
+    if e.relatedNode.tagName == 'HTML'
+        node = e.relatedNode
+        for child in node.children
+            if child and child.tagName isnt "BODY"
+                node.removeChild child
+    return
+    
+window.addEventListener 'DOMNodeInserted', listener, true
+
+# I can't seem to work out how to remove things from the body before they load
+# So we need to replace the functions defined by popupcalendarsub that are called
+window.location = """
+    javascript: function checkLogo(){}; function buildPage(){}; function biggercomment(){};
+"""
+
+$ ->
+    window.onload = ->
+    document.onclick = ->
+    window.removeEventListener 'DOMNodeInserted', listener, true
+    styler.start()

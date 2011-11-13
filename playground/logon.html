@@ -1,0 +1,191 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"><title>Timesheet log-on</title><style type="text/css">
+<!--
+body {  font-family: Verdana, Arial, Helvetica, sans-serif; color: #000000; font-size: 8pt; background-color: #FFFFFF}
+td {  font-size: 8pt}
+a {text-decoration: none; color: #5050FF; }
+a:hover {text-decoration: underline; color: #5050FF; }
+.linklike {text-decoration: none; color: #8080FF; cursor: hand; }
+html>body .linklike {text-decoration: none; color: #8080FF; cursor: pointer; }
+.asub {text-decoration: none; color: #808080;  }
+input {  font-size: 8pt;  font-family: Verdana, Arial, Helvetica, sans-serif;}
+select {  font-size: 8pt;  font-family: Verdana, Arial, Helvetica, sans-serif;}
+.arch {  color: #999999; font-size: 7pt}
+.alert {  color: #FFFFFF; background-color: #C00000;}
+.highlight { background-color: #F0F0FF;}
+.readonly {  color: #000000; background-color: #F0F0FF;}
+.title {  font-size: 10pt}
+.subhead {  font-size: 10pt}
+.footnote {  font-size: 7pt}
+.message {border: solid 1px; padding: 10px; margin: 5px; text-align: left; vertical-align: top; background-color: #FFFFc0;}
+.sysmessage {border: solid 1px; padding: 10px; margin: 5px; text-align: left; vertical-align: top; background-color: #F0F0FF;}
+.sidehelp { font-style: italic; font-size: 7pt; color: #a0a0a0 }
+.nodrop {  font-size: 8pt; border-style: solid; border-width: 1; border-color: #808080; padding: 3;}
+.nomod {  font-size: 8pt; border-style: solid; border-width: 1; border-color: #808080; padding: 3;}
+.help {  font-size: 8pt; color: #a0a0a0}
+.monohead {  background-color: #C0C0C0}
+.weekday {  background-color: #F0F0FF}
+.ok {  background-color: #C0FFC0; text-align: right}
+.short {  background-color: #FFC0C0; text-align: right}
+.missed {  background-color: #FF8080; text-align: right}
+.current {  background-color: #E0E0FF; text-align: right}
+.oktxt {  color: #80bb80;}
+.shorttxt {  color: #eeb0b0;}
+.missedtxt {  color: #dd8080;}
+.greytxt {  color: #808080;}
+.weekend {  background-color: #E0E0F8}
+.total {  background-color: #4040FF; color: #FFFFFF}
+.plain {  text-decoration: none; color: #000000}
+.step { padding: 10px 20px; background-color: #D2E9D2; text-align: left;}
+.adbox {border: solid 1px; padding: 10px; text-align: center; vertical-align: top; background-color: #F0F0FF;}
+.head {  font-size: medium; font-weight: bold; padding-bottom: 5px;}
+.selbox {  width: 300}
+.col {  background-color: #FFFFFF}
+.colx {  background-color: #FFFFFF}
+.col000 {  background-color: #FFFFFF}
+.col100 {  background-color: #EEFFFF}
+.col200 {  background-color: #DDFFFF}
+.col010 {  background-color: #FFEEFF}
+.col110 {  background-color: #EEEEFF}
+.col210 {  background-color: #DDEEFF}
+.col020 {  background-color: #FFDDFF}
+.col120 {  background-color: #EEDDFF}
+.col220 {  background-color: #DDDDFF}
+
+.col001 {  background-color: #FFFFEE}
+.col101 {  background-color: #EEFFEE}
+.col201 {  background-color: #DDFFEE}
+.col011 {  background-color: #FFEEEE}
+.col111 {  background-color: #EEEEEE}
+.col211 {  background-color: #DDEEEE}
+.col021 {  background-color: #FFDDEE}
+.col121 {  background-color: #EEDDEE}
+.col221 {  background-color: #DDDDEE}
+
+.col002 {  background-color: #FFFFDD}
+.col102 {  background-color: #EEFFDD}
+.col202 {  background-color: #DDFFDD}
+.col012 {  background-color: #FFEEDD}
+.col112 {  background-color: #EEEEDD}
+.col212 {  background-color: #DDEEDD}
+.col022 {  background-color: #FFDDDD}
+.col122 {  background-color: #EEDDDD}
+.col222 {  background-color: #DDDDDD}
+
+.plerror      {background-color: #FFC0C0;}
+
+@media print {
+.notonprint { display: none; }
+}
+
+-->
+</style>
+<script language="Javascript">
+
+	function formfocus()
+	{
+		var f = document.forms[0];
+		if (f && f.elements.length > 0)
+				f.elements[0].focus();
+	}
+
+	var ie  = document.all;
+
+	function setselcolours(aform)
+	{
+		if (ie)
+			return;
+		for (var x in aform.elements)
+		{
+			var e = aform.elements[x];
+			if (e.tagName.toUpperCase() == "SELECT" && !e.multiple)
+			{
+				if (e.selectedIndex == -1)
+					e.className = "colx";
+				else
+					e.className = e.options[e.selectedIndex].className;
+			}
+
+		}
+	}
+
+	function dobackgroundsend(postData, theurl)
+	{
+	    if (window.XMLHttpRequest)
+	    {
+	        req = new XMLHttpRequest();
+	    }
+	    else if (window.ActiveXObject)
+	    {
+	        req = new ActiveXObject("Microsoft.XMLHTTP");
+	    }
+		if (req)
+		{
+			req.open("POST", theurl, true);
+	 		req.setRequestHeader('Content-Type','application/x-www-form-urlencoded');
+			req.send(postData);
+		}
+	}
+
+	function closemydiv(element)
+	{
+		if (element.tagName == "DIV")
+		{
+			element.style.display = "none";
+			return;
+		}
+		if (element.parentNode != null)
+		{
+				closemydiv(element.parentNode);
+		}
+	}
+
+	function checkLogo()
+	{
+		var el = document.getElementById("logo");
+		if (!el)
+			return;
+		if (el.complete)
+			return;
+		var logo = el.src;
+		el.src = "../images/query.gif";
+		window.setTimeout(function(){
+				el.src = logo;
+			}, 2000);
+	}
+
+</script>
+<script type="text/javascript" language="JavaScript" src="../popcal/popcalendar.js"></script></head><style type="text/css">embed[type*="application/x-shockwave-flash"],embed[src*=".swf"],object[type*="application/x-shockwave-flash"],object[codetype*="application/x-shockwave-flash"],object[src*=".swf"],object[codebase*="swflash.cab"],object[classid*="D27CDB6E-AE6D-11cf-96B8-444553540000"],object[classid*="d27cdb6e-ae6d-11cf-96b8-444553540000"],object[classid*="D27CDB6E-AE6D-11cf-96B8-444553540000"]{	display: none !important;}</style><body onload="jspopinit();formfocus();"><div onclick="bShow=true" id="calendar" style="z-index: 999; position: absolute; visibility: hidden; "><table width="220" style="font-family:Arial;font-size:11px;border: 1px solid #A0A0A0;" bgcolor="#ffffff"><tbody><tr bgcolor="#000066"><td><table width="218"><tbody><tr><td style="padding:2px;font-family:Arial;font-size:11px;"><font color="#ffffff"><b><span id="caption"><span id="spanLeft" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage('changeLeft','left2.gif');this.style.borderColor='#8af';window.status='Click to scroll to previous month. Hold mouse button to scroll automatically.'" onclick="decMonth()" onmouseout="clearInterval(intervalID1);swapImage('changeLeft','left1.gif');this.style.borderColor='#36f';window.status=''" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout('StartDecMonth()',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)">&nbsp;<img id="changeLeft" src="../popcal/left1.gif" width="10" height="11" border="0">&nbsp;</span>&nbsp;<span id="spanRight" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage('changeRight','right2.gif');this.style.borderColor='#8af';window.status='Click to scroll to next month. Hold mouse button to scroll automatically.'" onmouseout="clearInterval(intervalID1);swapImage('changeRight','right1.gif');this.style.borderColor='#36f';window.status=''" onclick="incMonth()" onmousedown="clearTimeout(timeoutID1);timeoutID1=setTimeout('StartIncMonth()',500)" onmouseup="clearTimeout(timeoutID1);clearInterval(intervalID1)">&nbsp;<img id="changeRight" src="../popcal/right1.gif" width="10" height="11" border="0">&nbsp;</span>&nbsp;<span id="spanMonth" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage('changeMonth','drop2.gif');this.style.borderColor='#8af';window.status='Click to select a month.'" onmouseout="swapImage('changeMonth','drop1.gif');this.style.borderColor='#36f';window.status=''" onclick="popUpMonth()"></span>&nbsp;<span id="spanYear" style="border:1px solid #36f;cursor:pointer" onmouseover="swapImage('changeYear','drop2.gif');this.style.borderColor='#8af';window.status='Click to select a year.'" onmouseout="swapImage('changeYear','drop1.gif');this.style.borderColor='#36f';window.status=''" onclick="popUpYear()"></span>&nbsp;</span></b></font></td><td align="right"><a href="javascript:hideCalendar()"><img src="../popcal/close.gif" width="15" height="13" border="0"></a></td></tr></tbody></table></td></tr><tr><td style="padding:5px" bgcolor="#ffffff"><span id="content"></span></td></tr><tr bgcolor="#f0f0f0"><td style="padding:5px" align="center"><span id="lblToday"><font color="#000066">Today is <a onmousemove="window.status='Go To Current Month'" onmouseout="window.status=''" title="Go To Current Month" style="text-decoration:none;color:black;" href="javascript:monthSelected=monthNow;yearSelected=yearNow;constructCalendar();">Sat, 12 Nov 2011</a></font></span></td></tr></tbody></table></div><div id="selectMonth" style="z-index:+999;position:absolute;visibility:hidden;"></div><div id="selectYear" style="z-index:+999;position:absolute;visibility:hidden;"></div><table width="100%"><tbody><tr><td width="100%" class="title">Timesheet log-on</td><td><br><br><br></td><td class="title"></td></tr></tbody></table><hr size="1" noshade=""><form action="timeworked.php" method="POST">  <table border="0" width="75%" cellspacing="0" cellpadding="0">
+    <tbody><tr>
+      <td width="18%">Log-on id </td>
+      <td>
+        <input type="text" name="login_user" size="30">
+      </td>
+      <td class="help">
+        &nbsp;&nbsp;
+      </td>
+      <td class="help">
+        This is usually your email address
+      </td>
+    </tr>
+    <tr>
+      <td>Password</td>
+      <td>
+        <input type="password" name="login_pw" size="30">
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+		&nbsp;
+      </td>
+    </tr>
+    <tr>
+      <td></td>
+      <td>
+        <input type="submit" name="submit" value="Log in">
+      </td>
+    </tr>
+  </tbody></table>
+</form>
+<a href="../selfserve.php">Forgotten password</a>
+<hr size="1" noshade=""><p align="right" style="font-style: italic; font-size: 7pt; color: #a0a0a0"><a href="http://timesheet.clockbeat.com">Clockbeat Timesheet</a>  Version 2.4 © Steve Holt 2000-2010</p></body></html>
