@@ -37,16 +37,19 @@ class Counter
             unless isNaN(number)
                 el.removeClass 'error'
                 number = Math.round(number*100)/100
-                el.val number
+                if number > 0
+                    el.val number
+                else
+                    el.val ''
                 counter.update num, place, number
             else
                 el.addClass 'error'
             
-            if val.length > 0
+            if val.length > 0 and (isNaN(number) or number > 0)
                 if select.val().length is 0
                     select.addClass 'error'
             else
-                if Number($(counter.$tasks[num]).text()) == 0
+                if counter.taskTotals[num] == 0
                     select.removeClass 'error'
     
     update: (task, day, value) ->
@@ -170,7 +173,7 @@ styler =
         $('.filter-text').keyup ->
             if not activityOptions?
                 activityOptions = $ "<select/>"
-                for [value, text] in scraper.options
+                for [text, value] in scraper.options
                     activityOptions.append $("<option>#{text}</option>").attr {value}
                 
             el = $(this)
