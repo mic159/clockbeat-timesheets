@@ -203,4 +203,20 @@ styler =
 #   BEGIN!
 ########################
 
-styler.start()
+# Remove the popupcalendarsub annoying thing
+listener = (e) ->
+    if e.relatedNode.tagName == 'HTML'
+        node = e.relatedNode
+        node.removeChild node.firstChild while node.firstChild
+
+window.addEventListener 'DOMNodeInserted', listener, true
+
+# I can't seem to work out how to remove things from the body before they load
+# So we need to replace the functions defined by popupcalendarsub that are called
+window.location = """
+    javascript: function checkLogo(){}; function buildPage(){}; function biggercomment(){};
+"""
+
+$ ->
+    window.removeEventListener 'DOMNodeInserted', listener, true
+    styler.start()

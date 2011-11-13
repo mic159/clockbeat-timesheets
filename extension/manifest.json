@@ -5,6 +5,7 @@
   "description": "Restyles the Clockbeat timesheet system, and adds a handy search feature.",
   "content_scripts": [
   	{
+  	  "run_at" : "document_start",
   	  "matches": [
   	        "http://timesheet.clockbeat.com/auth.php",
   	        "http://timesheet.clockbeat.com/auth.php/timeworked*",
@@ -14,7 +15,8 @@
   	  "js": [
             "libraries/underscore.js", "libraries/iefixes.js", "libraries/jquery.js", "libraries/jade.js",
             "templates.js", "parse.js", "theme.js"
-        ]
+        ],
+      "all_frames" : true
     }
   ],
   "icons": {
