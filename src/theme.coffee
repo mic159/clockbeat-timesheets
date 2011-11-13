@@ -208,7 +208,8 @@ listener = (e) ->
     if e.relatedNode.tagName == 'HTML'
         node = e.relatedNode
         node.removeChild node.firstChild while node.firstChild
-
+    return
+    
 window.addEventListener 'DOMNodeInserted', listener, true
 
 # I can't seem to work out how to remove things from the body before they load
@@ -218,5 +219,6 @@ window.location = """
 """
 
 $ ->
+    window.onload = ->
     window.removeEventListener 'DOMNodeInserted', listener, true
     styler.start()
