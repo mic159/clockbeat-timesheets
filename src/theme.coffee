@@ -101,7 +101,7 @@ styler =
         @fillInTimeSheet()
         @setupCommentButton()
         
-        $(".timesheet").fadeIn()
+        $(".timesheet").show()
     
     setupCounter: ->
         @counterTotal = $("td.all.total span", @timesheet)
