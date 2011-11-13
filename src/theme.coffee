@@ -207,7 +207,9 @@ styler =
 listener = (e) ->
     if e.relatedNode.tagName == 'HTML'
         node = e.relatedNode
-        node.removeChild node.firstChild while node.firstChild
+        for child in node.children
+            if child and child.tagName isnt "BODY"
+                node.removeChild child
     return
     
 window.addEventListener 'DOMNodeInserted', listener, true
@@ -220,5 +222,6 @@ window.location = """
 
 $ ->
     window.onload = ->
+    document.onclick = ->
     window.removeEventListener 'DOMNodeInserted', listener, true
     styler.start()

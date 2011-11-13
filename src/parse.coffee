@@ -123,14 +123,14 @@ makeScraper = (window, $) ->
     
     get_links: ->
         selectors = 
-            choices: 'table:eq(2) a:eq(2)'
+            choices: 'span.arch a'
             options: '.notonprint'
             calendar: 'input[type=image]'
             help: 'a[target=helpwin]'
-            prev: 'table:eq(3) a:eq(0)'
-            next: 'table:eq(3) a:eq(1)'
-            copy: 'table:eq(3) a:eq(2)'
-            print: 'table:eq(3) a:eq(3)'
+            prev: 'table[border=0] a:eq(0)'
+            next: 'table[border=0] a:eq(1)'
+            copy: 'table[border=0] a:eq(2)'
+            print: 'table[border=0] a:eq(3)'
         
         @links = links =
             logoff: {href:"/auth.php/logoff.php", text:"Log off"}
