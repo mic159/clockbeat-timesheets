@@ -1,10 +1,7 @@
 tr.values
     td.filter: input(type="text").filter-text
     td
-        select(name="Project#{index}").activities
-            option.blank
-            - for [text, value] in options
-                option(value=value)= text
+        select(name="Project#{index}").activities!= selectOptions
     
     td: button.button.makecomment Comment
     

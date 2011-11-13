@@ -1,0 +1,7 @@
+- bottomBlank ?= false
+- if not bottomBlank
+    option.blank
+- for [text, value] in options
+    option(value=value)= text
+- if bottomBlank
+    option.blank

@@ -41,7 +41,7 @@
                 tbody
                     - number = entries.length + 3
                     - for index in [0..number]
-                        != templates["templates/row.jade"]({index, days, options})
+                        != templates["templates/row.jade"]({index, days, selectOptions})
                     tr
                         td
                         td      

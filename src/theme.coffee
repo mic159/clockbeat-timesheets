@@ -94,12 +94,14 @@ styler =
     normalPage: ->
         @scraper = makeScraper window, $
         @scraper.start()
+        
+        @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
         @scraper.templates = templates
         
         @load 'templates/base.jade', @scraper
         
         @timesheet = $(".timesheet")
-        @setupFilter()
+        @setupFilter @scraper.options
         @setupCounter()
         @fillInTimeSheet()
         @setupCommentButton()
@@ -151,15 +153,10 @@ styler =
             
             false
     
-    setupFilter: ->
+    setupFilter: (options) ->
         # Add behaviour to the textbox.
         scraper = @scraper
         activityOptions = undefined
-                
-        $("select").mousedown ->
-            el = $(this)
-            if $("option.blank", el).length is 0
-                el.append $("<option/>").addClass "blank"
         
         $("select").change ->
             el = $(this)
@@ -170,37 +167,35 @@ styler =
                 if Number($('.task.total span', el.parent().parent()).text()) > 0
                     el.addClass 'error'
                 
-        $('.filter-text').keyup ->
-            if not activityOptions?
-                activityOptions = $ "<select/>"
-                for [text, value] in scraper.options
-                    activityOptions.append $("<option>#{text}</option>").attr {value}
                 
+        allSelectOptions = templates["templates/options.jade"]({options})
+        $('.filter-text').keyup ->                
             el = $(this)
-            grandparent = el.parent().parent()
             
             # Determine the select element to edit
             # And the current option
+            grandparent = el.parent().parent()
             select = $('select:first', grandparent).first()
             current = select.val()
             
-            # Regenerate the list with all items.
-            select.children().remove()
-            select.append activityOptions.children().clone()
-            
-            # Reset selected option and get the options and terms
-            select.val current
-            options = select.children()
-            terms = el.val().toLowerCase().split(/\W/).filter (n) -> n != ''
-            
-            # Remove all items that don't match the filter.
-            if terms.length > 0
-                for option in options
-                    option = $(option)
-                    for term in terms
-                        if option.text().toLowerCase().indexOf(term) < 0 and option.attr("value").length > 0
-                            option.remove()
-                            break
+            filter = el.val()
+            if filter.match /^\s*$/
+                # No filter, put in all the available options
+                select.html allSelectOptions
+                select.val current
+            else
+                # Create a regex from the filter
+                terms = filter.toLowerCase().split(/\W/).filter (n) -> n!= ''
+                regex = new RegExp "^.*#{terms.join '.*'}.*$", 'i'
+                
+                # Find all the options that apply to the filter
+                replacement = []
+                for info in options
+                    if info[0].match regex
+                        replacement.push info
+                
+                # Create and add the necessary options
+                select.html templates["templates/options.jade"]({options:replacement, bottomBlank:true})
 
 ########################
 #   BEGIN!
