@@ -17,7 +17,7 @@ Development
 You'll need to install node.js and npm (https://github.com/joyent/node/wiki/Installation and http://npmjs.org/)
 Then you'll need coffeescript, coffeejade, stylus and watch:
 
-    sudo npm install coffeescript stylus -g
+    sudo npm install coffee-script@1.1.2 stylus -g
     npm install watch
     git clone https://github.com/fusesource/coffeejade
     cd coffeejade
