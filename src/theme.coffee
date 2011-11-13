@@ -170,8 +170,8 @@ styler =
         $('.filter-text').keyup ->
             if not activityOptions?
                 activityOptions = $ "<select/>"
-                for key, value of scraper.activities
-                    activityOptions.append $("<option>#{value}</option>").attr value:key
+                for [value, text] in scraper.options
+                    activityOptions.append $("<option>#{text}</option>").attr {value}
                 
             el = $(this)
             grandparent = el.parent().parent()

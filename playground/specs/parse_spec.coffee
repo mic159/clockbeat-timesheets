@@ -78,13 +78,15 @@ describe 'Scraping', ->
         
         it "should get correct activities", ->
             entries = jasmine.createSpy 'entries'
+            options = jasmine.createSpy 'options'
             activities = jasmine.createSpy 'activites'
-            fakeExtractActivities = spyOn(scraper, 'extractActivities').andReturn {entries, activities}
+            fakeExtractActivities = spyOn(scraper, 'extractActivities').andReturn {entries, options, activities}
             
             scraper.get_activities()
             
             expect(fakeExtractActivities).toHaveBeenCalledWith extractedInfo
             expect(scraper.entries).toBe entries
+            expect(scraper.options).toBe options
             expect(scraper.activities).toBe activities
         
         it "should make entries to be a list of nonempty keys from ddboxes", ->
@@ -105,6 +107,22 @@ describe 'Scraping', ->
                 '504370': 'DV010 PU'
                 '512053': 'AD016 Training'
                 '561313': 'DV015 BPU'
+        
+        it "should make options be a list of [value, key] sorted by value", ->
+            {options} = scraper.extractActivities extractedInfo
+            expect(options).toEqual [
+                [ 'AD001 Admin P', '430025' ]
+                [ 'AD016 Training', '512053' ]
+                [ 'BM001 P', '490364' ]
+                [ 'BM002 SI', '490366' ]
+                [ 'DV010 PU', '504370' ]
+                [ 'DV015 BPU', '561313' ]
+                [ 'MT001 MP', '430031' ]
+                [ 'MT002 MD', '430033' ]
+                [ 'ZZ001 Annual leave', '120010' ]
+                [ 'ZZ002 Sick leave', '120012' ]
+                [ 'ZZ003 Other leave', '120014' ]
+                ]
                 
     ########################
     #   VALUES
@@ -211,3 +229,45 @@ describe 'Scraping', ->
                 [ '31', 'Oct', '40', 'timeworked.php?start=1320062400&name=624967']
                 [ '07', 'Nov', '40', '']
                 ]
+            
+    ########################
+    #   HIDDEN
+    ########################
+    
+    describe "Hidden", ->
+        it "should get the {names:value} of all the hidden inputs", ->
+            scraper.get_hidden()
+            expect(scraper.hidden).toEqual
+                name: '624967'
+                state: 'first'
+                start: '1320667200'
+                gotodate: '07 Nov 2011'
+                linecount: '6'
+                
+                # scriptdone is 0 in the original document
+                # but gets changed to 1 so that the update button actually works
+                scriptdone: '1'
+                
+                lineunique0: '662820', OldProject0: '504370', OldTask0: ''
+                OldDay0Hours0: '', OldDay1Hours0: '8.00', OldDay2Hours0: '8.00', OldDay3Hours0: '8.00'
+                OldDay4Hours0: '8.00', OldDay5Hours0: '', OldDay6Hours0: ''
+                
+                lineunique1: '662938', OldProject1: '512053', OldTask1: ''
+                OldDay0Hours1: '', OldDay1Hours1: '', OldDay2Hours1: '', OldDay3Hours1: ''
+                OldDay4Hours1: '', OldDay5Hours1: '', OldDay6Hours1: ''
+                
+                lineunique2: '662940', OldProject2: '120014', OldTask2: 'Jury Duty'
+                OldDay0Hours2: '8.00', OldDay1Hours2: '', OldDay2Hours2: '', OldDay3Hours2: ''
+                OldDay4Hours2: '', OldDay5Hours2: '', OldDay6Hours2: ''
+                
+                lineunique3: '', OldProject3: '', OldTask3: ''
+                OldDay0Hours3: '', OldDay1Hours3: '', OldDay2Hours3: '', OldDay3Hours3: ''
+                OldDay4Hours3: '', OldDay5Hours3: '', OldDay6Hours3: ''
+                
+                lineunique4: '', OldProject4: '', OldTask4: ''
+                OldDay0Hours4: '', OldDay1Hours4: '', OldDay2Hours4: '', OldDay3Hours4: ''
+                OldDay4Hours4: '', OldDay5Hours4: '', OldDay6Hours4: ''
+                
+                lineunique5: '', OldProject5: '', OldTask5: ''
+                OldDay0Hours5: '', OldDay1Hours5: '', OldDay2Hours5: '', OldDay3Hours5: ''
+                OldDay4Hours5: '', OldDay5Hours5: '', OldDay6Hours5: ''

@@ -65,21 +65,26 @@ makeScraper = (window, $) ->
           })()
         """
 
-        {@activities, @entries} = @extractActivities info
+        {@activities, @entries, @options} = @extractActivities info
     
     extractActivities: (info) ->
         entries = []
+        reverse = {}
         activities = {}
 
         for [key, name] in info.ddproj
           if key isnt ""
               activities[key] = name
+              reverse[name] = key
 
         for [a, b, key] in info.ddboxes
           if key isnt ""
               entries.push key
-
-        {activities, entries}
+      
+        options = for value in _.values(activities).sort()
+            [value, reverse[value]]
+            
+        {activities, entries, options}
           
     ########################
     #   VALUES
@@ -170,6 +175,21 @@ makeScraper = (window, $) ->
             text = week.replace('.00', '').replace('-', '0').replace(/\s+/g, ' ')
             match = /(\d+).(\w+).([\d\.]+)/.exec text
             [match[1], match[2], match[3], href]
+          
+    ########################
+    #   HIDDEN
+    ########################
+    
+    get_hidden: ->
+        hidden = {}
+        for tag in $("input[type=hidden]")
+            tag = $ tag
+            hidden[tag.attr 'name'] = tag.attr 'value'
+        
+        # Ensure scriptdone is 1
+        hidden.scriptdone = '1'
+        
+        @hidden = hidden
           
 ########################
 #   EXPORT

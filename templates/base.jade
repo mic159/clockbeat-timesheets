@@ -22,6 +22,10 @@
     
     .timesheet
         form(method="POST", name="theform", action="timeworked.php").main.container
+            .hidden
+                - for name, value of hidden
+                    input(type="hidden", name=name, value=value)
+                    
             table
                 thead
                     tr
@@ -37,7 +41,7 @@
                 tbody
                     - number = entries.length + 3
                     - for index in [0..number]
-                        != templates["templates/row.jade"]({index, days, activities})
+                        != templates["templates/row.jade"]({index, days, options})
                     tr
                         td
                         td      

@@ -3,8 +3,8 @@ tr.values
     td
         select(name="Project#{index}").activities
             option.blank
-            - for key, value of activities
-                option(value=key)= value
+            - for [text, value] in options
+                option(value=value)= text
     
     td: button.button.makecomment Comment
     
