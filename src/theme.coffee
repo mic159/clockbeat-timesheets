@@ -74,29 +74,30 @@ class Counter
 ########################
 
 styler =
-    start: ->
-        if $('input[name="login_user"]').length > 0
+    start: (@$body) ->
+        if $('input[name="login_user"]', @$body).length > 0
             @loginPage()
         else
             @normalPage()
     
     load: (template, locals) ->
-        $("body, head, style").empty()
-        html = templates[template](locals)
         body = $("body")
-        if body.length == 0
-            $("html").append $("body")
-        
-        $("body").html html
-        $("body").attr onload:""
-        $("table, form, a").css display:"block"
+        if body.length is 0
+            body = $("<body/>")
+            $("html").append body
+        else
+            body.empty()
+
+        html = templates[template](locals)
+        body.html html
+        $("table, form, a", body).css display:"block"
     
     loginPage: ->
         @load 'templates/logon.jade'
-        $("input[name=login_user]").focus()
+        $("input[name=login_user]", @$body).focus()
     
     normalPage: ->
-        @scraper = makeScraper $, $("body")
+        @scraper = makeScraper $, @$body
         @scraper.start()
         
         @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
@@ -115,6 +116,7 @@ styler =
         @setupFilter @scraper.options
         @setupCounter()
         @fillInTimeSheet()
+        @setupSubmitButton()
         @setupCommentButton()
         
         $(".timesheet").show()
@@ -163,6 +165,38 @@ styler =
                 comment.show()
             
             false
+    
+    setupSubmitButton: ->
+        styler = this
+        $("input[type=submit]", @timesheet).click ->
+            submit = $(this)
+            form = submit.closest 'form'
+            data = form.serialize()
+            $(".container").fadeOut()
+            $.post form.attr("action"), data, (data, status, e) ->
+                styler.start styler.bodyFromText data
+            false
+                
+    bodyFromText: (data) ->
+        index = data.indexOf "<body"
+        data = "<html>#{data[index..data.length-1]}"
+            .replace(/onload="[^"]+"/g, "")
+            .replace(/<(\/?)(script|img)/g, '<$1pre class="was_$2"')
+            
+        newBody = $ "<body/>"
+        for item in $ data
+            newBody.append item
+        
+        # Make it apparent where the activities are
+        $(".was_script:last", newBody).addClass("activities_javascript")
+        
+        # Re put in the version information
+        versionAt = data.indexOf("Version")
+        version = data[versionAt..data.indexOf("<", versionAt)]
+        newBody.append $("<p/>").text version
+        
+        # Return the new body
+        newBody
     
     setupFilter: (options) ->
         # Add behaviour to the textbox.
@@ -220,4 +254,10 @@ window.location = """
 
 window.onload = ->
 document.onclick = ->
-styler.start()
+
+$("head, style").empty()
+body = $ "body"
+body.attr onload:""
+$("script:last", body).addClass("activities_javascript")
+
+styler.start body

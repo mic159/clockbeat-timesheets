@@ -48,13 +48,7 @@ makeScraper = ($, $body) ->
     ########################
     
     get_activities: ->
-        # Seems that nodejs thinks the desired script tag is second last
-        # But browser says the actual last one....
-        code = $("script:last", $body)
-        if code.html().length is 0
-            scripts = $("script", $body)
-            code = $(scripts[scripts.length-2])
-        
+        code = $(".activities_javascript", $body)
         javascript = code.html().replace /, ddproj/g, ', ""'
 
         info = eval """
@@ -196,7 +190,7 @@ makeScraper = ($, $body) ->
     ########################
     
     get_copyright: ->
-        @copyright = $("p:last").text().trim()
+        @copyright = $("p:last", $body).text().trim()
           
 ########################
 #   EXPORT
