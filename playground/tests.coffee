@@ -6,7 +6,7 @@ jasmine = require 'jasmine-node'
 
 loadTestPage (window, $) ->
     # Set scraper as a global for the tests
-    global.scraper = makeScraper window, $
+    global.scraper = makeScraper $, $("body")
     
     # Options for tests
     done = ->

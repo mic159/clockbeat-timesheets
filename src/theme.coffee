@@ -96,7 +96,7 @@ styler =
         $("input[name=login_user]").focus()
     
     normalPage: ->
-        @scraper = makeScraper window, $
+        @scraper = makeScraper $, $("body")
         @scraper.start()
         
         @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)

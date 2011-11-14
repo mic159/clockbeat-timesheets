@@ -1,4 +1,4 @@
-makeScraper = (window, $) ->
+makeScraper = ($, $body) ->
     start: (get) ->
         unless get?
             # No get specified, determine all the possible keys
@@ -18,7 +18,7 @@ makeScraper = (window, $) ->
     ########################
     
     get_title: ->
-        original = $(".title:first").text()
+        original = $(".title:first", $body).text()
         @title = @extractTitle original
     
     extractTitle: (original) ->
@@ -50,9 +50,9 @@ makeScraper = (window, $) ->
     get_activities: ->
         # Seems that nodejs thinks the desired script tag is second last
         # But browser says the actual last one....
-        code = $("script:last")
+        code = $("script:last", $body)
         if code.html().length is 0
-            scripts = $("script")
+            scripts = $("script", $body)
             code = $(scripts[scripts.length-2])
         
         javascript = code.html().replace /, ddproj/g, ', ""'
@@ -93,7 +93,7 @@ makeScraper = (window, $) ->
     get_values: ->
         # Return list of [comment, mon, tue, wed, thur, fri, sat, sun] 
         @values = []
-        for row in $("form[name=theform] tr")
+        for row in $("form[name=theform] tr", $body)
             inputs = $("input", row)
             if inputs.length <= 1
                 # This row doesn't have any values
@@ -116,7 +116,7 @@ makeScraper = (window, $) ->
     ########################
     
     get_days: ->
-        daysRow = $("form[name=theform] tr:eq(0)")
+        daysRow = $("form[name=theform] tr:eq(0)", $body)
         @days = for day in $("td.weekday, td.weekend", daysRow)
             txt = $(day).text()
             if txt.length is 0 then continue
@@ -141,7 +141,7 @@ makeScraper = (window, $) ->
             logoff: {href:"/auth.php/logoff.php", text:"Log off"}
             
         for own name, selector of selectors
-            next = $ selector
+            next = $ selector, $body
             links[name] = {href:next.attr("href"), text:next.text()}
         
         links.prev.text = "Last Week"
@@ -155,7 +155,7 @@ makeScraper = (window, $) ->
     
     get_weeks: ->
         # Get the weeks in their current form
-        weeks = $('table:last')
+        weeks = $('table:last', $body)
         
         # Add 'child' class where necessary
         $('a', weeks).addClass 'child'
@@ -182,7 +182,7 @@ makeScraper = (window, $) ->
     
     get_hidden: ->
         hidden = {}
-        for tag in $("input[type=hidden]")
+        for tag in $("input[type=hidden]", $body)
             tag = $ tag
             hidden[tag.attr 'name'] = tag.attr 'value'
         
