@@ -82,7 +82,8 @@ styler =
             
     goTo: (location) ->
         if not @changing
-            $(".container").fadeOut()
+            $(".container").fadeOut =>
+                @showLoading()
             @changing = true
             
         @currentLocation = location
@@ -111,6 +112,7 @@ styler =
             $(".container", body).fadeIn()
             
         @$body = $("body")
+        $(".loading").remove()
     
     addTitle: (txt) ->
         head = $("head")
@@ -135,6 +137,9 @@ styler =
         $("input[name=login_user]", @$body).focus()
     
     normalPage: ->
+        if window.location.pathname == "/auth.php/logoff.php"
+            window.history.pushState {}, "", "/auth.php/timeworked.php"
+            
         @scraper = makeScraper $, @$body
         @scraper.start()
         
@@ -206,7 +211,8 @@ styler =
             submit = $(this)
             form = submit.closest 'form'
             data = form.serialize()
-            $(".container").fadeOut()
+            $(".container").fadeOut ->
+                styler.showLoading()
             $.post form.attr("action"), data, (data, status, e) ->
                 styler.start styler.bodyFromText data
             false
@@ -245,6 +251,13 @@ styler =
         
         # Return the new body
         newBody
+    
+    showLoading: ->
+        loading = $(".loading")
+        if loading.length is 0
+            $("body").append $("<span>Loading...</span>").addClass "loading"
+        else
+            loading.show()
     
     setupFilter: (options) ->
         # Add behaviour to the textbox.
