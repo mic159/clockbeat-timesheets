@@ -191,6 +191,13 @@ makeScraper = (window, $) ->
         
         @hidden = hidden
           
+    ########################
+    #   COPYRIGHT
+    ########################
+    
+    get_copyright: ->
+        @copyright = $("p:last").text().trim()
+          
 ########################
 #   EXPORT
 ########################

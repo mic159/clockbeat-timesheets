@@ -271,3 +271,12 @@ describe 'Scraping', ->
                 lineunique5: '', OldProject5: '', OldTask5: ''
                 OldDay0Hours5: '', OldDay1Hours5: '', OldDay2Hours5: '', OldDay3Hours5: ''
                 OldDay4Hours5: '', OldDay5Hours5: '', OldDay6Hours5: ''
+            
+    ########################
+    #   COPYRIGHT
+    ########################
+    
+    describe "Copyright", ->
+    	it "should extract the copyright line at the bottom", ->
+    		scraper.get_copyright()
+    		expect(scraper.copyright).toEqual "Version 2.4 © Steve Holt 2000-2010"
