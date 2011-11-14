@@ -74,47 +74,83 @@ class Counter
 ########################
 
 styler =
-    start: ->
-        if $('input[name="login_user"]').length > 0
+    start: (@$body) ->
+        if $('input[name="login_user"]', @$body).length > 0
             @loginPage()
         else
             @normalPage()
+            
+    goTo: (location) ->
+        if not @changing
+            $(".container").fadeOut()
+            @changing = true
+            
+        @currentLocation = location
+        $.get location, (data) =>
+            if location == @currentLocation
+                @start @bodyFromText data
+                @changing = false
     
     load: (template, locals) ->
-        $("body, head, style").empty()
-        html = templates[template](locals)
         body = $("body")
-        if body.length == 0
-            $("html").append $("body")
-        
-        $("body").html html
-        $("body").attr onload:""
+        if body.length is 0
+            body = $("<body/>")
+            $("html").append body
+        else
+            body.empty()
+
+        html = templates[template](locals)
+        body.html html
         $("table, form, a").css display:"block"
+        $(".container", body).hide()
+        
+        if not @afterAjax
+            $(".container", body).show()
+            @afterAjax = true
+        else
+            $(".container", body).fadeIn()
+            
+        @$body = $("body")
+    
+    addTitle: (txt) ->
+        head = $("head")
+        if head.length is 0
+            head = $("<head/>")
+            $("html").append head
+        
+        title = $("title", head)
+        if title.length is 0
+            title = $("<title/>")
+            head.append title
+        
+        if not txt?
+            info = @scraper.title
+            txt = "Timesheet for #{info.name} - #{info.date}"
+        title.text txt
     
     loginPage: ->
         @load 'templates/logon.jade'
-        $("input[name=login_user]").focus()
+        @setupSubmitButton @$body
+        @addTitle "Timesheet Logon"
+        $("input[name=login_user]", @$body).focus()
     
     normalPage: ->
-        @scraper = makeScraper window, $
+        @scraper = makeScraper $, @$body
         @scraper.start()
         
         @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
         @scraper.templates = templates
         
-        # Not dodgy at all...
-        a = $("<a>Prettified by David Johnstone, Stephen Moore and Michael Cooper</a>")
-        	.attr
-        		href:"https://chrome.google.com/webstore/detail/njmnbiecjddpmnpekdghdmfcjojngagd"
-        		target:"blank"
-        @scraper.copyright += "<br/>" + a[0].outerHTML
-        
         @load 'templates/base.jade', @scraper
         
         @timesheet = $(".timesheet")
+        
+        @addTitle()
         @setupFilter @scraper.options
         @setupCounter()
         @fillInTimeSheet()
+        @setupAjaxyButtons()
+        @setupSubmitButton @timesheet
         @setupCommentButton()
         
         $(".timesheet").show()
@@ -163,6 +199,52 @@ styler =
                 comment.show()
             
             false
+    
+    setupSubmitButton: ($context) ->
+        styler = this
+        $("input[type=submit]", $context).click ->
+            submit = $(this)
+            form = submit.closest 'form'
+            data = form.serialize()
+            $(".container").fadeOut()
+            $.post form.attr("action"), data, (data, status, e) ->
+                styler.start styler.bodyFromText data
+            false
+    
+    setupAjaxyButtons: ->
+        styler = this
+        $("a.ajaxy", @$body).click ->
+            href = $(this).attr "href"
+            title = styler.scraper.title
+            title = "Timesheet for #{title.name} - #{title.date}"
+            
+            # Register change in location and go to it
+            history.pushState {}, title, href
+            styler.goTo href
+            
+            # Return false to prevent the click action making the page reload
+            false
+                
+    bodyFromText: (data) ->
+        index = data.indexOf "<body"
+        data = "<html>#{data[index..data.length-1]}"
+            .replace(/onload="[^"]+"/g, "")
+            .replace(/<(\/?)(script|img)/g, '<$1pre class="was_$2"')
+            
+        newBody = $ "<body/>"
+        for item in $ data
+            newBody.append item
+        
+        # Make it apparent where the activities are
+        $(".was_script:last", newBody).addClass("activities_javascript")
+        
+        # Re put in the version information
+        versionAt = data.lastIndexOf("Version")
+        version = data[versionAt...data.indexOf("<", versionAt)]
+        newBody.append $("<p/>").text version
+        
+        # Return the new body
+        newBody
     
     setupFilter: (options) ->
         # Add behaviour to the textbox.
@@ -220,4 +302,15 @@ window.location = """
 
 window.onload = ->
 document.onclick = ->
-styler.start()
+
+# Some dom manipulation before we begin
+$("head, style").empty()
+body = $ "body"
+body.attr onload:""
+$("script:last", body).addClass("activities_javascript")
+
+# Find popstate events so we can change the page when back/forward buttons are pressed
+$(window).bind "popstate", -> styler.goTo "#{window.location.pathname}#{window.location.search}"
+
+# Finally! Start!
+styler.start body
