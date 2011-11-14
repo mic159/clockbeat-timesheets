@@ -141,13 +141,6 @@ styler =
         @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
         @scraper.templates = templates
         
-        # Not dodgy at all...
-        a = $("<a>Prettified by David Johnstone, Stephen Moore and Michael Cooper</a>")
-        	.attr
-        		href:"https://chrome.google.com/webstore/detail/njmnbiecjddpmnpekdghdmfcjojngagd"
-        		target:"blank"
-        @scraper.copyright += "<br/>" + a[0].outerHTML
-        
         @load 'templates/base.jade', @scraper
         
         @timesheet = $(".timesheet")
