@@ -114,6 +114,7 @@ styler =
     
     loginPage: ->
         @load 'templates/logon.jade'
+        @setupSubmitButton @$body
         $("input[name=login_user]", @$body).focus()
     
     normalPage: ->
@@ -137,7 +138,7 @@ styler =
         @setupCounter()
         @fillInTimeSheet()
         @setupAjaxyButtons()
-        @setupSubmitButton()
+        @setupSubmitButton @timesheet
         @setupCommentButton()
         
         $(".timesheet").show()
@@ -187,9 +188,9 @@ styler =
             
             false
     
-    setupSubmitButton: ->
+    setupSubmitButton: ($context) ->
         styler = this
-        $("input[type=submit]", @timesheet).click ->
+        $("input[type=submit]", $context).click ->
             submit = $(this)
             form = submit.closest 'form'
             data = form.serialize()

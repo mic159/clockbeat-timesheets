@@ -11,8 +11,9 @@
         
         .navigation
             ul.links
-                - for link in ['help', 'print', 'options', 'logoff']
+                - for link in ['help', 'print', 'options']
                     li: a(href=links[link].href)= links[link].text
+                li: a(href=links.logoff.href).ajaxy= links.logoff.text
             ul.timetravel
                 li: a(href=links.prev.href).ajaxy= links.prev.text
                 li(style="display:none"): a(id="calendar")
