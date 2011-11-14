@@ -101,7 +101,15 @@ styler =
 
         html = templates[template](locals)
         body.html html
-        $("table, form, a", body).css display:"block"
+        $("table, form, a").css display:"block"
+        $(".container", body).hide()
+        
+        if not @afterAjax
+            $(".container", body).show()
+            @afterAjax = true
+        else
+            $(".container", body).fadeIn()
+            
         @$body = $("body")
     
     loginPage: ->
