@@ -83,6 +83,10 @@ styler =
     load: (template, locals) ->
         $("body, head, style").empty()
         html = templates[template](locals)
+        body = $("body")
+        if body.length == 0
+            $("html").append $("body")
+        
         $("body").html html
         $("body").attr onload:""
         $("table, form, a").css display:"block"
@@ -104,7 +108,7 @@ styler =
         		href:"https://chrome.google.com/webstore/detail/njmnbiecjddpmnpekdghdmfcjojngagd"
         		target:"blank"
         @scraper.copyright += "<br/>" + a[0].outerHTML
-        	
+        
         @load 'templates/base.jade', @scraper
         
         @timesheet = $(".timesheet")
@@ -214,7 +218,6 @@ window.location = """
     javascript: function checkLogo(){}; function buildPage(){}; function biggercomment(){};
 """
 
-$ ->
-    window.onload = ->
-    document.onclick = ->
-    styler.start()
+window.onload = ->
+document.onclick = ->
+styler.start()
