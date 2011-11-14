@@ -192,7 +192,7 @@ styler =
         
         # Re put in the version information
         versionAt = data.indexOf("Version")
-        version = data[versionAt..data.indexOf("<", versionAt)]
+        version = data[versionAt...data.indexOf("<", versionAt)]
         newBody.append $("<p/>").text version
         
         # Return the new body
