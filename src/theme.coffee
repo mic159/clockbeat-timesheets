@@ -112,9 +112,26 @@ styler =
             
         @$body = $("body")
     
+    addTitle: (txt) ->
+        head = $("head")
+        if head.length is 0
+            head = $("<head/>")
+            $("html").append head
+        
+        title = $("title", head)
+        if title.length is 0
+            title = $("<title/>")
+            head.append title
+        
+        if not txt?
+            info = @scraper.title
+            txt = "Timesheet for #{info.name} - #{info.date}"
+        title.text txt
+    
     loginPage: ->
         @load 'templates/logon.jade'
         @setupSubmitButton @$body
+        @addTitle "Timesheet Logon"
         $("input[name=login_user]", @$body).focus()
     
     normalPage: ->
@@ -134,6 +151,8 @@ styler =
         @load 'templates/base.jade', @scraper
         
         @timesheet = $(".timesheet")
+        
+        @addTitle()
         @setupFilter @scraper.options
         @setupCounter()
         @fillInTimeSheet()
