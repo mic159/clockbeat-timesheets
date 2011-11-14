@@ -5,7 +5,7 @@
                 
         ul.actions
             - for link in ['copy', 'choices']
-                li: a(href=links[link].href)= links[link].text
+                li: a(href=links[link].href).ajaxy= links[link].text
                 
         .clearing &nbsp;
         
@@ -14,9 +14,9 @@
                 - for link in ['help', 'print', 'options', 'logoff']
                     li: a(href=links[link].href)= links[link].text
             ul.timetravel
-                li: a(href=links.prev.href)= links.prev.text
+                li: a(href=links.prev.href).ajaxy= links.prev.text
                 li(style="display:none"): a(id="calendar")
-                li: a(href=links.next.href)= links.next.text
+                li: a(href=links.next.href).ajaxy= links.next.text
                 
         .clearing &nbsp;
     
@@ -57,7 +57,7 @@
                         - for [day, month, total, href] in weeks
                             td
                                 - if href
-                                    a(href=href).child= "#{day} #{month} (#{total})"
+                                    a(href=href).child.ajaxy= "#{day} #{month} (#{total})"
                                 - else
                                     span.child.nolink #{day} #{month} (#{total})
 

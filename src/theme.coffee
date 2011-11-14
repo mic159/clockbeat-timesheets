@@ -79,6 +79,17 @@ styler =
             @loginPage()
         else
             @normalPage()
+            
+    goTo: (location) ->
+        if not @changing
+            $(".container").fadeOut()
+            @changing = true
+            
+        @currentLocation = location
+        $.get location, (data) =>
+            if location == @currentLocation
+                @start @bodyFromText data
+                @changing = false
     
     load: (template, locals) ->
         body = $("body")
@@ -91,6 +102,7 @@ styler =
         html = templates[template](locals)
         body.html html
         $("table, form, a", body).css display:"block"
+        @$body = $("body")
     
     loginPage: ->
         @load 'templates/logon.jade'
@@ -116,6 +128,7 @@ styler =
         @setupFilter @scraper.options
         @setupCounter()
         @fillInTimeSheet()
+        @setupAjaxyButtons()
         @setupSubmitButton()
         @setupCommentButton()
         
@@ -175,6 +188,20 @@ styler =
             $(".container").fadeOut()
             $.post form.attr("action"), data, (data, status, e) ->
                 styler.start styler.bodyFromText data
+            false
+    
+    setupAjaxyButtons: ->
+        styler = this
+        $("a.ajaxy", @$body).click ->
+            href = $(this).attr "href"
+            title = styler.scraper.title
+            title = "Timesheet for #{title.name} - #{title.date}"
+            
+            # Register change in location and go to it
+            history.pushState {}, title, href
+            styler.goTo href
+            
+            # Return false to prevent the click action making the page reload
             false
                 
     bodyFromText: (data) ->
@@ -255,9 +282,14 @@ window.location = """
 window.onload = ->
 document.onclick = ->
 
+# Some dom manipulation before we begin
 $("head, style").empty()
 body = $ "body"
 body.attr onload:""
 $("script:last", body).addClass("activities_javascript")
 
+# Find popstate events so we can change the page when back/forward buttons are pressed
+$(window).bind "popstate", -> styler.goTo "#{window.location.pathname}#{window.location.search}"
+
+# Finally! Start!
 styler.start body
