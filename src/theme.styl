@@ -150,7 +150,8 @@ form.main
         border: 1px solid #BBBBBB
     
     input[name=submitu]
-        padding: 8px 25px
+        padding: 8px 5px
+        width: 94px
         border-top-left-radius: 3px
         border-top-right-radius: 3px
         border-bottom-left-radius: 3px
@@ -186,13 +187,15 @@ form.main
                 
                 input
                     max-width: 98px
-                
+            
             &.total span
-                color:#787878
                 display:inline-block
                 width:55px
                 height:16px
                 padding: 0;
+            
+            &.total span, input:disabled
+                color:#787878
                 border-radius: 1px 1px 1px 1px
                 background: rgba(1,1,1,0.11)
                 border: 1px solid #BBBBBB

@@ -94,6 +94,11 @@ styler =
     
     load: (template, locals) ->
         body = $("body")
+        if $(".container:first", body).is(":visible")
+            fade = false
+        else
+            fade = true
+        
         if body.length is 0
             body = $("<body/>")
             $("html").append body
@@ -105,7 +110,7 @@ styler =
         $("table, form, a").css display:"block"
         $(".container", body).hide()
         
-        if not @afterAjax
+        if not @afterAjax or not fade
             $(".container", body).show()
             @afterAjax = true
         else
@@ -211,8 +216,12 @@ styler =
             submit = $(this)
             form = submit.closest 'form'
             data = form.serialize()
-            $(".container").fadeOut ->
-                styler.showLoading()
+            #$(".container").fadeOut ->
+            #    styler.showLoading()
+            $("form.main input").attr("disabled", "disable")
+            $("form.main button").attr("disabled", "disable")
+            $("form.main select").attr("disabled", "disable")
+            $("#submit").val "Updating..."
             $.post form.attr("action"), data, (data, status, e) ->
                 styler.start styler.bodyFromText data
             false
