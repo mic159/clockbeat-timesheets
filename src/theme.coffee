@@ -105,7 +105,7 @@ styler =
         else
             body.empty()
 
-        html = templates[template](locals)
+        html = partial template, locals
         body.html html
         $("table, form, a").css display:"block"
         $(".container", body).hide()
@@ -136,7 +136,9 @@ styler =
         title.text txt
     
     loginPage: ->
-        @load 'templates/logon.jade'
+        scraper = makeScraper($, @$body)
+        scraper.get_copyright()
+        @load 'logon', scraper
         @setupSubmitButton @$body
         @addTitle "Timesheet Logon"
         $("input[name=login_user]", @$body).focus()
@@ -148,10 +150,10 @@ styler =
         @scraper = makeScraper $, @$body
         @scraper.start()
         
-        @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
-        @scraper.templates = templates
+        @scraper.selectOptions = partial 'options', options:@scraper.options
+        @scraper.partial = partial
         
-        @load 'templates/base.jade', @scraper
+        @load 'base', @scraper
         
         @timesheet = $(".timesheet")
         
@@ -283,7 +285,7 @@ styler =
                     el.addClass 'error'
                 
                 
-        allSelectOptions = templates["templates/options.jade"]({options})
+        allSelectOptions = partial 'options', {options}
         $('.filter-text').keyup ->                
             el = $(this)
             
@@ -310,7 +312,7 @@ styler =
                         replacement.push info
                 
                 # Create and add the necessary options
-                select.html templates["templates/options.jade"]({options:replacement, bottomBlank:true})
+                select.html partial 'options', {options:replacement, bottomBlank:true}
 
 ########################
 #   BEGIN!
