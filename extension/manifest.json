@@ -18,7 +18,7 @@
   	  "css": ["theme.css"],
   	  "js": [
             "libraries/underscore.js", "libraries/iefixes.js", "libraries/jquery.js", "libraries/jade.js",
-            "templates.js", "parse.js", "theme.js"
+            "templates.js", "parse.js", "theme.js", "start.js"
         ]
     }
   ],
