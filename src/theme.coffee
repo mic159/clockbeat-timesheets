@@ -74,23 +74,30 @@ class Counter
 ########################
 
 styler =
+    base: ""
+    
+    setupOnPop: ->
+        # Find popstate events so we can change the page when back/forward buttons are pressed
+        $(window).bind "popstate", => @goTo "#{window.location.pathname}#{window.location.search}"
+        
     start: (@$body) ->
         if $('input[name="login_user"]', @$body).length > 0
             @loginPage()
         else
             @normalPage()
             
-    goTo: (location) ->
+    goTo: (location, cb) ->
         if not @changing
             $(".container").fadeOut =>
                 @showLoading()
             @changing = true
             
         @currentLocation = location
-        $.get location, (data) =>
+        $.get "#{@base}#{location}", (data) =>
             if location == @currentLocation
                 @start @bodyFromText data
                 @changing = false
+                cb?()
     
     load: (template, locals) ->
         body = $("body")
@@ -107,7 +114,8 @@ styler =
 
         html = partial template, locals
         body.html html
-        $("table, form, a").css display:"block"
+        $("table").css display:"table"
+        $("form, a").css display:"block"
         $(".container", body).hide()
         
         if not @afterAjax or not fade
@@ -224,7 +232,7 @@ styler =
             $("form.main button").attr("disabled", "disable")
             $("form.main select").attr("disabled", "disable")
             $("#submit").val "Updating..."
-            $.post form.attr("action"), data, (data, status, e) ->
+            $.post "#{styler.base}#{form.attr 'action'}", data, (data, status, e) ->
                 styler.start styler.bodyFromText data
             false
     
@@ -314,27 +322,11 @@ styler =
                 # Create and add the necessary options
                 select.html partial 'options', {options:replacement, bottomBlank:true}
 
+        
 ########################
-#   BEGIN!
+#   EXPORTS
 ########################
 
-# I can't seem to work out how to remove things from the body before they load
-# So we need to replace the functions defined by popupcalendarsub that are called
-window.location = """
-    javascript: function checkLogo(){}; function buildPage(){}; function biggercomment(){};
-"""
-
-window.onload = ->
-document.onclick = ->
-
-# Some dom manipulation before we begin
-$("head, style").empty()
-body = $ "body"
-body.attr onload:""
-$("script:last", body).addClass("activities_javascript")
-
-# Find popstate events so we can change the page when back/forward buttons are pressed
-$(window).bind "popstate", -> styler.goTo "#{window.location.pathname}#{window.location.search}"
-
-# Finally! Start!
-styler.start body
+exports ?= window
+exports.styler = styler
+exports.Counter = Counter
