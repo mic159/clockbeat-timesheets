@@ -1,5 +1,5 @@
 #!/bin/sh
-jade < templates/layout.jade > extension/app.html
+jade -o {node:false} < templates/layout.jade > extension/app.html
 coffeejade --amdout extension/templates.js.1 templates
 echo "
 (function() {

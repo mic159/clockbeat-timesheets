@@ -2,11 +2,23 @@
 html(lang="en")
     head
         title Timesheet
-        link(rel="stylesheet", type="text/css", href="theme.css")
-        script(type="text/javascript", src="libraries/jquery.js")
+        link(rel="stylesheet", type="text/css", href="/theme.css")
+        - for lib in ["libraries/underscore", "libraries/iefixes", "libraries/jquery", "libraries/jade", "templates", "parse", "theme"]
+            script(type="text/javascript", src="/#{lib}.js")
+        
+        - if (node)
+            :coffeescript
+                styler.base = "/clockbeat/auth.php/";
+            
+        - else
+            :coffeescript
+                styler.base = "http://timesheet.clockbeat.com/auth.php/";
+            
         :coffeescript
-            $ -> $("a").show()
+            $ ->
+                location = "#{window.location.pathname}#{window.location.search}"
+                if location == "/app.html" or location == "/"
+                    location = "/auth.php/timeworked.php"
+                styler.goTo location, -> styler.setupOnPop()
     body
-        .main
-            .container
-                <span>TODO: Implement!</span>
+        span.loading Loading...
