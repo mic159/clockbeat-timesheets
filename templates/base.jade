@@ -22,7 +22,7 @@
         .clearing &nbsp;
     
     .timesheet
-        form(method="POST", name="theform", action="timeworked.php").main.container
+        form(method="POST", name="theform", action="/auth.php/timeworked.php").main.container
             .hidden
                 - for name, value of hidden
                     input(type="hidden", name=name, value=value)
