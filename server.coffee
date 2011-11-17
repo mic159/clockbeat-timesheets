@@ -26,8 +26,6 @@ send = (path, {method, data, cookies, query}={}, callback) ->
         method: method
         payload: info
         cookies: cookies
-        setEncoding: "binary"
-        disableGzip: true
     
     fetchUrl url, options, callback
         
