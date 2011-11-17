@@ -2,6 +2,11 @@
 html(lang="en")
     head
         title Timesheet
+        style
+            html {
+                height:100%;
+            }
+            
         link(rel="stylesheet", type="text/css", href="/theme.css")
         - for lib in ["libraries/underscore", "libraries/iefixes", "libraries/jquery", "libraries/jade", "templates", "parse", "theme"]
             script(type="text/javascript", src="/#{lib}.js")
