@@ -46,10 +46,10 @@
                     tr
                         td
                         td      
-                        td.all.total: span &nbsp;
+                        td.all.total: span!= "&nbsp;"
                             
                         - for day in days
-                            td.day.total: span &nbsp;
+                            td.day.total: span!= "&nbsp;"
             .utility
                 .submit
                     input(type="submit", name="submitu", value="Update")#submit.button

@@ -14,13 +14,16 @@ class Counter
             
         @clear()
     
+    numOrNothing: ($el, num=0) ->
+        $($el)[0].innerHTML = if num > 0 then Math.round(num*100)/100 else '&nbsp;'
+        
     clear: ->
-        @$total.text ''
+        @numOrNothing @$total
         for day in @$days
-            $(day).text ''
+            @numOrNothing day
         
         for task in @$tasks
-            $(task).text ''
+            @numOrNothing task
         
     changeWeek: (value) ->
         v = @$week.text()
@@ -63,11 +66,11 @@ class Counter
         @dayTotals[day] += value
         @taskTotals[task] += value
         
-        numOrNothing = (num) -> if num > 0 then Math.round(num*100)/100 else ''
-        @$total.text numOrNothing @total
+        numOrNothing = (num) -> 
+        @numOrNothing @$total, @total
         @changeWeek Math.round(@total)
-        $(@$days[day]).text numOrNothing @dayTotals[day]
-        $(@$tasks[task]).text numOrNothing @taskTotals[task]
+        @numOrNothing @$days[day], @dayTotals[day]
+        @numOrNothing @$tasks[task], @taskTotals[task]
         
 ########################
 #   STYLER HELPER

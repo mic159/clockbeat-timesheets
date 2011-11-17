@@ -10,7 +10,7 @@ tr.values
         td: input(type="text", name="Day#{num}Hours#{index}", size="4").day
         - num += 1
 
-    td.task.total: span &nbsp;
+    td.task.total: span!= "&nbsp;"
     
 tr.comment
     th Comment
