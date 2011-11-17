@@ -22,7 +22,7 @@
         .clearing &nbsp;
     
     .timesheet
-        form(method="POST", name="theform", action="timeworked.php").main.container
+        form(method="POST", name="theform", action="/auth.php/timeworked.php").main.container
             .hidden
                 - for name, value of hidden
                     input(type="hidden", name=name, value=value)
@@ -42,14 +42,14 @@
                 tbody
                     - number = entries.length + 3
                     - for index in [0..number]
-                        != templates["templates/row.jade"]({index, days, selectOptions})
+                        != partial('row', {index, days, selectOptions})
                     tr
                         td
                         td      
-                        td.all.total: span &nbsp;
+                        td.all.total: span!= "&nbsp;"
                             
                         - for day in days
-                            td.day.total: span &nbsp;
+                            td.day.total: span!= "&nbsp;"
             .utility
                 .submit
                     input(type="submit", name="submitu", value="Update")#submit.button
@@ -62,7 +62,4 @@
                                 - else
                                     span.child.nolink #{day} #{month} (#{total})
 
-div.copyright
-    span= copyright
-    span: a(href="https://chrome.google.com/webstore/detail/njmnbiecjddpmnpekdghdmfcjojngagd", target="blank")
-        | Prettified by David Johnstone, Stephen Moore and Michael Cooper
+!= partial('copyright', {copyright})

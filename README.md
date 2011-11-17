@@ -29,3 +29,9 @@ Then you'll need extra libraries
 To do all the transpiling of coffeescript, jade and stylus templates into the extension folder, just run "cake watch" from the root folder.
 
 This will use the files found in bin to run the necessary commands when these files are changed.
+
+Web App version
+---------------
+
+When you run "cake server", nodejs will serve the app on localhost:8000 and works as you'd expect.
+For this you'll need atleast node v0.6.0, redis (sudo apt-get install redis) and another two npm libraries (fetch, connect-redis)

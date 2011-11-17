@@ -14,13 +14,16 @@ class Counter
             
         @clear()
     
+    numOrNothing: ($el, num=0) ->
+        $($el)[0].innerHTML = if num > 0 then Math.round(num*100)/100 else '&nbsp;'
+        
     clear: ->
-        @$total.text ''
+        @numOrNothing @$total
         for day in @$days
-            $(day).text ''
+            @numOrNothing day
         
         for task in @$tasks
-            $(task).text ''
+            @numOrNothing task
         
     changeWeek: (value) ->
         v = @$week.text()
@@ -63,34 +66,41 @@ class Counter
         @dayTotals[day] += value
         @taskTotals[task] += value
         
-        numOrNothing = (num) -> if num > 0 then Math.round(num*100)/100 else ''
-        @$total.text numOrNothing @total
+        numOrNothing = (num) -> 
+        @numOrNothing @$total, @total
         @changeWeek Math.round(@total)
-        $(@$days[day]).text numOrNothing @dayTotals[day]
-        $(@$tasks[task]).text numOrNothing @taskTotals[task]
+        @numOrNothing @$days[day], @dayTotals[day]
+        @numOrNothing @$tasks[task], @taskTotals[task]
         
 ########################
 #   STYLER HELPER
 ########################
 
 styler =
+    base: ""
+    
+    setupOnPop: ->
+        # Find popstate events so we can change the page when back/forward buttons are pressed
+        $(window).bind "popstate", => @goTo "#{window.location.pathname}#{window.location.search}"
+        
     start: (@$body) ->
         if $('input[name="login_user"]', @$body).length > 0
             @loginPage()
         else
             @normalPage()
             
-    goTo: (location) ->
+    goTo: (location, cb) ->
         if not @changing
             $(".container").fadeOut =>
                 @showLoading()
             @changing = true
             
         @currentLocation = location
-        $.get location, (data) =>
+        $.get "#{@base}#{location}", (data) =>
             if location == @currentLocation
                 @start @bodyFromText data
                 @changing = false
+                cb?()
     
     load: (template, locals) ->
         body = $("body")
@@ -107,9 +117,10 @@ styler =
         else
             body.empty()
 
-        html = templates[template](locals)
+        html = partial template, locals
         body.html html
-        $("table, form, a").css display:"block"
+        $("table").css display:"table"
+        $("form, a").css display:"block"
         
         if @afterAjax and fade
             $(".container", body).hide()
@@ -138,7 +149,9 @@ styler =
         title.text txt
     
     loginPage: ->
-        @load 'templates/logon.jade'
+        scraper = makeScraper($, @$body)
+        scraper.get_copyright()
+        @load 'logon', scraper
         @setupSubmitButton @$body
         @addTitle "Timesheet Logon"
         $("input[name=login_user]", @$body).focus()
@@ -150,10 +163,10 @@ styler =
         @scraper = makeScraper $, @$body
         @scraper.start()
         
-        @scraper.selectOptions = templates["templates/options.jade"](options:@scraper.options)
-        @scraper.templates = templates
+        @scraper.selectOptions = partial 'options', options:@scraper.options
+        @scraper.partial = partial
         
-        @load 'templates/base.jade', @scraper
+        @load 'base', @scraper
         
         @timesheet = $(".timesheet")
         
@@ -218,6 +231,7 @@ styler =
             submit = $(this)
             form = submit.closest 'form'
             data = form.serialize()
+            
             if submit.val() is "Update"
                 $("form.main input").attr "disabled", "disable"
                 $("form.main button").attr "disabled", "disable"
@@ -227,7 +241,7 @@ styler =
                 $(".container").fadeOut =>
                     styler.showLoading()
             
-            $.post form.attr("action"), data, (data, status, e) ->
+            $.post "#{styler.base}#{form.attr 'action'}", data, (data, status, e) ->
                 styler.start styler.bodyFromText data
             false
     
@@ -288,7 +302,7 @@ styler =
                     el.addClass 'error'
                 
                 
-        allSelectOptions = templates["templates/options.jade"]({options})
+        allSelectOptions = partial 'options', {options}
         $('.filter-text').keyup ->                
             el = $(this)
             
@@ -315,29 +329,20 @@ styler =
                         replacement.push info
                 
                 # Create and add the necessary options
-                select.html templates["templates/options.jade"]({options:replacement, bottomBlank:true})
+                select.html partial 'options', {options:replacement, bottomBlank:true}
+            
+            haveHours = Number($("task.total span", grandparent).text()) > 0
+            haveChoice = select.val().length > 0
+            # xor!
+            if not haveHours isnt not haveChoice
+                select.removeClass 'error'
+            else
+                select.addClass 'error'
 
 ########################
-#   BEGIN!
+#   EXPORTS
 ########################
 
-# I can't seem to work out how to remove things from the body before they load
-# So we need to replace the functions defined by popupcalendarsub that are called
-window.location = """
-    javascript: function checkLogo(){}; function buildPage(){}; function biggercomment(){};
-"""
-
-window.onload = ->
-document.onclick = ->
-
-# Some dom manipulation before we begin
-$("head, style").empty()
-body = $ "body"
-body.attr onload:""
-$("script:last", body).addClass("activities_javascript")
-
-# Find popstate events so we can change the page when back/forward buttons are pressed
-$(window).bind "popstate", -> styler.goTo "#{window.location.pathname}#{window.location.search}"
-
-# Finally! Start!
-styler.start body
+exports ?= window
+exports.styler = styler
+exports.Counter = Counter
