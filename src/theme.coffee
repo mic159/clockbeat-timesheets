@@ -324,8 +324,15 @@ styler =
                 
                 # Create and add the necessary options
                 select.html partial 'options', {options:replacement, bottomBlank:true}
+            
+            haveHours = Number($("task.total span", grandparent).text()) > 0
+            haveChoice = select.val().length > 0
+            # xor!
+            if not haveHours isnt not haveChoice
+                select.removeClass 'error'
+            else
+                select.addClass 'error'
 
-        
 ########################
 #   EXPORTS
 ########################
