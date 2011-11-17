@@ -17,9 +17,6 @@
         ]
     }
   ],
-  "app": {
-    "launch": { "web_url": "http://timesheet.clockbeat.com/auth.php/logoff.php" }
-  },
   "icons": {
   	"128": "icon.png"
   },
