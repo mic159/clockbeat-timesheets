@@ -1,5 +1,5 @@
 querystring = require 'querystring'
-{FetchStream} = require "fetch"
+{fetchUrl} = require "fetch"
 express = require 'express'
 {_} = require 'underscore'
 
@@ -20,26 +20,16 @@ send = (path, {method, data, cookies, query}={}, callback) ->
     
     query ?= ""
     query = querystring.stringify query
-    fetch = new FetchStream "http://timesheet.clockbeat.com#{path}?#{query}",
+    
+    url = "http://timesheet.clockbeat.com#{path}?#{query}"
+    options =
         method: method
         payload: info
         cookies: cookies
-        
-    chunks = []
-    fetch.on 'data', (chunk) ->
-        chunks.push chunk
-            
-    fetch.on 'end', () ->
-        captured.cb {data:chunks.join(""), meta:captured.meta}
-        captured.cb = ->
+        setEncoding: "binary"
+        disableGzip: true
     
-    fetch.on 'meta', (meta) ->
-        captured.meta = meta
-        
-    # Make sure we catch errors
-    fetch.on 'error', (e) ->
-        captured.cb "", e.message
-        captured.cb = ->
+    fetchUrl url, options, callback
         
 clockbeat = (method) -> (req, res) ->
     data = []
@@ -49,7 +39,7 @@ clockbeat = (method) -> (req, res) ->
     req.on 'end', () ->
         data = querystring.parse(data.join "")
         cookies = req.session.cookies
-        send req.params[0], {method, data, cookies, query:req.query}, ({data, meta}, error) ->
+        send req.params[0], {method, data, cookies, query:req.query}, (err, meta, data) ->
             cookies = req.session.cookies = meta?.cookieJar?.cookies
             if cookies?
                 result = []
@@ -57,6 +47,9 @@ clockbeat = (method) -> (req, res) ->
                     for cookie in info
                         result.push "#{cookie.name}=#{cookie.value}"
                 req.session.cookies = result
+            
+            res.header 'Content-Type', 'text/plain'
+            res.header 'Content-Length', data.length
             res.write data
             res.end()
             
