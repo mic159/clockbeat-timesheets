@@ -94,6 +94,8 @@ styler =
     
     load: (template, locals) ->
         body = $("body")
+        
+        # Detect if the page was left faded in.
         if $(".container:first", body).is(":visible")
             fade = false
         else
@@ -108,13 +110,13 @@ styler =
         html = templates[template](locals)
         body.html html
         $("table, form, a").css display:"block"
-        $(".container", body).hide()
         
-        if not @afterAjax or not fade
-            $(".container", body).show()
-            @afterAjax = true
-        else
+        if @afterAjax and fade
+            $(".container", body).hide()
             $(".container", body).fadeIn()
+        else
+            @afterAjax = true
+        
             
         @$body = $("body")
         $(".loading").remove()
@@ -216,12 +218,15 @@ styler =
             submit = $(this)
             form = submit.closest 'form'
             data = form.serialize()
-            #$(".container").fadeOut ->
-            #    styler.showLoading()
-            $("form.main input").attr("disabled", "disable")
-            $("form.main button").attr("disabled", "disable")
-            $("form.main select").attr("disabled", "disable")
-            $("#submit").val "Updating..."
+            if submit.val() is "Update"
+                $("form.main input").attr "disabled", "disable"
+                $("form.main button").attr "disabled", "disable"
+                $("form.main select").attr "disabled", "disable"
+                $("#submit").val "Updating..."
+            else
+                $(".container").fadeOut =>
+                    styler.showLoading()
+            
             $.post form.attr("action"), data, (data, status, e) ->
                 styler.start styler.bodyFromText data
             false
