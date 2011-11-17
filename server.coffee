@@ -70,8 +70,9 @@ clockbeatPOST = clockbeat("POST")
 app = exports.app = express.createServer();
 
 app.configure ->
+    RedisStore = require('connect-redis')(express)
     app.use express.cookieParser()
-    app.use express.session(secret: "mighty_secretive")
+    app.use express.session(secret: "mighty_secretive", store:new RedisStore())
     app.set 'views', "#{__dirname}/templates"
     app.set 'view engine', 'jade'
     app.use app.router
