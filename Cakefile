@@ -5,7 +5,7 @@ runJade = -> spawn './bin/jade.sh', [], customFds:[0..2]
 runStylus = -> spawn './bin/stylus.sh', [], customFds:[0..2]
 runCoffee = -> spawn './bin/coffee.sh', [], customFds:[0..2]
 
-task 'watch', ->
+startWatching = ->
     runJade()
     runCoffee()
     runStylus()
@@ -18,3 +18,8 @@ task 'watch', ->
         monitor.on "changed", (f) ->
             if f[-5..] == '.styl'
                 runStylus()
+
+task 'watch', startWatching
+task 'server', ->
+    spawn './bin/run.sh', [], customFds:[0..2]
+    startWatching()
