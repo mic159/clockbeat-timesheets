@@ -1,51 +1,45 @@
 querystring = require 'querystring'
+{FetchStream} = require "fetch"
 express = require 'express'
-http = require 'http'
+{_} = require 'underscore'
 
 ########################
 ##   CLOCKBEAT
 ########################
         
-send = (path, {method, data}, callback) ->
+send = (path, {method, data, cookies, query}={}, callback) ->
     info = ""
+    method ?= "GET"
     if method is "POST"
         info = querystring.stringify data
-        
-    headers =
-        'Content-Length':info.length
-        'Content-Type':'application/x-www-form-urlencoded'
-        
-    captured = {cb:callback, request}
+
     if path[0] isnt "/"
         path = "/#{path}"
-    options = {host:"timesheet.clockbeat.com", 80, path, method, headers}
     
-    request = captured.request = http.request options, (response) ->
-        response.setEncoding('utf8')
-        chunks = []
-        response.on 'data', (chunk) ->
-            chunks.push chunk
+    captured = {cb:callback}
+    
+    query ?= ""
+    query = querystring.stringify query
+    fetch = new FetchStream "http://timesheet.clockbeat.com#{path}?#{query}",
+        method: method
+        payload: info
+        cookies: cookies
+        
+    chunks = []
+    fetch.on 'data', (chunk) ->
+        chunks.push chunk
             
-        response.on 'end', () ->
-            captured.cb chunks.join ""
-            captured.cb = ->
+    fetch.on 'end', () ->
+        captured.cb {data:chunks.join(""), meta:captured.meta}
+        captured.cb = ->
     
+    fetch.on 'meta', (meta) ->
+        captured.meta = meta
+        
     # Make sure we catch errors
-    request.on 'error', (e) ->
+    fetch.on 'error', (e) ->
         captured.cb "", e.message
         captured.cb = ->
-    
-    # Write to the request
-    request.write info
-    request.end()
-
-    # Application level timeout
-    # Default two minutes is too long, and currently no way to change it
-    setTimeout ->
-        captured.request.abort()
-        captured.cb "", "timeout"
-        captured.cb = ->
-    , 5000
         
 clockbeat = (method) -> (req, res) ->
     data = []
@@ -54,8 +48,16 @@ clockbeat = (method) -> (req, res) ->
         
     req.on 'end', () ->
         data = querystring.parse(data.join "")
-        send req.params[0], {method, data}, (result, error) ->
-            res.write result
+        cookies = req.session.cookies
+        send req.params[0], {method, data, cookies, query:req.query}, ({data, meta}, error) ->
+            cookies = req.session.cookies = meta?.cookieJar?.cookies
+            if cookies?
+                result = []
+                for name, info of cookies
+                    for cookie in info
+                        result.push "#{cookie.name}=#{cookie.value}"
+                req.session.cookies = result
+            res.write data
             res.end()
             
 clockbeatGET = clockbeat("GET")
@@ -68,6 +70,8 @@ clockbeatPOST = clockbeat("POST")
 app = exports.app = express.createServer();
 
 app.configure ->
+    app.use express.cookieParser()
+    app.use express.session(secret: "mighty_secretive")
     app.set 'views', "#{__dirname}/templates"
     app.set 'view engine', 'jade'
     app.use app.router
