@@ -34,4 +34,7 @@ Web App version
 ---------------
 
 When you run "cake server", nodejs will serve the app on localhost:8000 and works as you'd expect.
-For this you'll need atleast node v0.6.0, redis (sudo apt-get install redis) and another two npm libraries (fetch, connect-redis)
+For this you'll need atleast node v0.6.0, redis (sudo apt-get install redis-server)
+also:
+ sudo npm install node-dev -g
+ npm install jade connect-redis jade express coffee-script
