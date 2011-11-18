@@ -13,10 +13,12 @@ html(lang="en")
         
         - if (node)
             :coffeescript
+                styler.node = true
                 styler.base = "/clockbeat/auth.php/";
             
         - else
             :coffeescript
+                styler.node = false
                 styler.base = "http://timesheet.clockbeat.com/auth.php/";
             
         :coffeescript

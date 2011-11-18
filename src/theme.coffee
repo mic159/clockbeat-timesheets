@@ -78,6 +78,7 @@ class Counter
 
 styler =
     base: ""
+    node: false
     
     setupOnPop: ->
         # Find popstate events so we can change the page when back/forward buttons are pressed
@@ -147,11 +148,26 @@ styler =
             info = @scraper.title
             txt = "Timesheet for #{info.name} - #{info.date}"
         title.text txt
+      
+    fixCss: (type) ->
+        if not @node
+            $("body").css background:"none"
+            
+        if type == "normal"
+            if @node
+                $("body").css height:"0", padding:0
+                $(".container").css margin: "10px auto"
+                $(".timesheet").css margin: "10px auto"
+            else
+                $("body").css height:0, padding:10
+        else
+            $("body").css height:"100%"
     
     loginPage: ->
         scraper = makeScraper($, @$body)
         scraper.get_copyright()
         @load 'logon', scraper
+        @fixCss 'login'
         @setupSubmitButton @$body
         @addTitle "Timesheet Logon"
         $("input[name=login_user]", @$body).focus()
@@ -167,6 +183,7 @@ styler =
         @scraper.partial = partial
         
         @load 'base', @scraper
+        @fixCss "normal"
         
         @timesheet = $(".timesheet")
         
