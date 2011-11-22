@@ -43,8 +43,8 @@
                     - number = entries.length + 3
                     - for index in [0...number]
                         != partial('row', {index, days, selectOptions})
-                    tr
-                        td
+                    tr.totals
+                        td: button.button.newrow + New Row
                         td      
                         td.all.total: span!= "&nbsp;"
                             

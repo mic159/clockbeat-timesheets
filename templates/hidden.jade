@@ -1,0 +1,7 @@
+input(type="hidden", name="lineunique#{index}")
+input(type="hidden", name="OldProject#{index}")
+input(type="hidden", name="OldTask#{index}")
+- num = 0
+- for day in days
+    input(type="hidden", name="OldDay#{num}Hours#{index}")
+    - num += 1
