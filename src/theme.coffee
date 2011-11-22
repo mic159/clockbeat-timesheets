@@ -10,9 +10,15 @@ class Counter
         
         @cache = []
         for task in @taskTotals
-            @cache.push (0 for day in [0..7])
+            @addRow()
             
         @clear()
+    
+    addRow: (row) ->
+        @cache.push (0 for day in [0..7])
+        
+    nextIndex: ->
+        @taskTotals.length
     
     numOrNothing: ($el, num=0) ->
         $($el)[0].innerHTML = if num > 0 then Math.round(num*100)/100 else '&nbsp;'
@@ -194,6 +200,7 @@ styler =
         @setupAjaxyButtons()
         @setupSubmitButton @timesheet
         @setupCommentButton()
+        @setupNewRowButton()
         
         $(".timesheet").show()
     
@@ -274,6 +281,34 @@ styler =
             styler.goTo href
             
             # Return false to prevent the click action making the page reload
+            false
+    
+    setupNewRowButton: ->
+        $("button.newrow", @timesheet).click =>
+            # Create new row
+            index = @counter.nextIndex()
+            selectOptions = @scraper.selectOptions
+            $row = $ partial 'row', {selectOptions, index, days:@scraper.days}
+            
+            # Insert new row
+            $("tr.totals", @timesheet).before $row
+            
+            # Tell counter about the new row
+            select = $("select", $row)
+            @counter.addRow()
+            for input, place in $(".day", $row)
+                @counter.setupInput input, select, index, place
+            
+            # Add hidden stuff
+            $hidden = $("div.hidden", @timesheet)
+            $hidden.append partial 'hidden', {index, days:@scraper.days}
+            
+            # Adjust linecount
+            $lineCount = $("input[name='linecount']", $hidden)
+            newLineCount = Number($lineCount.val()) + 1
+            $lineCount.val newLineCount
+            
+            # Prevent default click action
             false
                 
     bodyFromText: (data) ->
