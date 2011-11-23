@@ -194,7 +194,7 @@ styler =
         @timesheet = $(".timesheet")
         
         @addTitle()
-        @setupFilter @scraper.options
+        @setupFilter()
         @setupCounter()
         @fillInTimeSheet()
         @setupAjaxyButtons()
@@ -290,6 +290,11 @@ styler =
             selectOptions = @scraper.selectOptions
             $row = $ partial 'row', {selectOptions, index, days:@scraper.days}
             
+            # Setup filter
+            @setupFilter
+                $select : $("select", $row)
+                $filter : $(".filter-text", $row)
+            
             # Insert new row
             $("tr.totals", @timesheet).before $row
             
@@ -339,12 +344,13 @@ styler =
         else
             loading.show()
     
-    setupFilter: (options) ->
+    setupFilter: ({$select, $filter}={}) ->
         # Add behaviour to the textbox.
-        scraper = @scraper
-        activityOptions = undefined
+        $select ?= $("select")
+        $filter ?= $(".filter-text")
+        {options, selectOptions} = @scraper
         
-        $("select").change ->
+        $select.change ->
             el = $(this)
             if el.val().length > 0
                 el.removeClass 'error'
@@ -353,9 +359,7 @@ styler =
                 if Number($('.task.total span', el.parent().parent()).text()) > 0
                     el.addClass 'error'
                 
-                
-        allSelectOptions = partial 'options', {options}
-        $('.filter-text').keyup ->                
+        $filter.keyup ->                
             el = $(this)
             
             # Determine the select element to edit
@@ -367,7 +371,7 @@ styler =
             filter = el.val()
             if filter.match /^\s*$/
                 # No filter, put in all the available options
-                select.html allSelectOptions
+                select.html selectOptions
                 select.val current
             else
                 # Create a regex from the filter
