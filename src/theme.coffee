@@ -3,25 +3,42 @@
 ########################
 
 class Counter
-    constructor: (@$total, @$days, @$tasks, @$week) ->
+    constructor: (@$total, @$days, @$week) ->
+        # Counts
         @total = 0
-        @dayTotals = (0 for day in [0..7])
-        @taskTotals = (0 for task in @$tasks)
+        @numRows = 0
+        @filledInTasks = 0
         
+        # Cached Values
         @cache = []
-        for task in @taskTotals
-            @addRow()
-            
+        @$tasks = []
+        @dayTotals = (0 for day in [0..7])
+        @taskTotals = []
+        
+        # Create events objects and initiate the dom
         @clear()
+        @events = $(this)
     
-    addRow: (row) ->
+    addTask: ->
+        @filledInTasks += 1
+        
+    removeTask: ->
+        @filledInTasks -= 1
+    
+    addRow: ($task) ->
+        @numRows += 1
+        @$tasks.push $task
+        @taskTotals.push 0
         @cache.push (0 for day in [0..7])
         
     nextIndex: ->
-        @taskTotals.length
+        @numRows
     
     numOrNothing: ($el, num=0) ->
         $($el)[0].innerHTML = if num > 0 then Math.round(num*100)/100 else '&nbsp;'
+        
+    needANewRow: ->
+        @filledInTasks >= @taskTotals.length and _.all(@taskTotals, (t) -> t > 0)
         
     clear: ->
         @numOrNothing @$total
@@ -60,6 +77,11 @@ class Counter
             else
                 if counter.taskTotals[num] == 0
                     select.removeClass 'error'
+            
+            counter.checkFullness()
+    
+    checkFullness: ->
+        if @needANewRow() then @events.trigger 'full'
     
     update: (task, day, value) ->
         old = @cache[task][day]
@@ -193,27 +215,38 @@ styler =
         
         @timesheet = $(".timesheet")
         
+        # Setup some stuff
         @addTitle()
         @setupFilter()
         @setupCounter()
         @fillInTimeSheet()
         @setupAjaxyButtons()
-        @setupSubmitButton @timesheet
+        @setupSubmitButton()
         @setupCommentButton()
-        @setupNewRowButton()
+        
+        # Setup events for adding new rows
+        $("button.newrow", @timesheet).click => @addNewRow()
+        @counter.events.bind 'full', _.bind @addNewRow, this
         
         $(".timesheet").show()
     
     setupCounter: ->
         @counterTotal = $("td.all.total span", @timesheet)
         @counterDays = $("td.day.total span", @timesheet)
-        @counterTasks = $("td.task.total span", @timesheet)
         @counterWeek = $(".weeks .nolink", @timesheet)
-        @counter = new Counter @counterTotal, @counterDays, @counterTasks, @counterWeek
+        @counter = new Counter @counterTotal, @counterDays, @counterWeek
     
     fillInTimeSheet: ->
         for entry, index in @scraper.entries
             $("select:eq(#{index})", @timesheet).val entry
+            @counter.addTask()
+        
+        counter = @counter
+        for tr, num in $("tr.values", @timesheet)
+            counter.addRow($(".task.total span", $(tr)))
+            select = $("select", tr)
+            for input, place in $(".day", tr)
+                @counter.setupInput input, select, num, place
         
         for values, num in @scraper.values[0...index]
             tr = $("tr.values:eq(#{num})", @timesheet)
@@ -230,12 +263,6 @@ styler =
                     @counter.update num, place, Number(value)
                     $(day).val value
         
-        counter = @counter
-        for tr, num in $("tr.values", @timesheet)
-            select = $("select", tr)
-            for input, place in $(".day", tr)
-                @counter.setupInput input, select, num, place
-        
         return
     
     setupCommentButton: ->
@@ -251,6 +278,7 @@ styler =
     
     setupSubmitButton: ($context) ->
         styler = this
+        $context ?= @timesheet
         $("input[type=submit]", $context).click ->
             submit = $(this)
             form = submit.closest 'form'
@@ -283,38 +311,37 @@ styler =
             # Return false to prevent the click action making the page reload
             false
     
-    setupNewRowButton: ->
-        $("button.newrow", @timesheet).click =>
-            # Create new row
-            index = @counter.nextIndex()
-            selectOptions = @scraper.selectOptions
-            $row = $ partial 'row', {selectOptions, index, days:@scraper.days}
-            
-            # Setup filter
-            @setupFilter
-                $select : $("select", $row)
-                $filter : $(".filter-text", $row)
-            
-            # Insert new row
-            $("tr.totals", @timesheet).before $row
-            
-            # Tell counter about the new row
-            select = $("select", $row)
-            @counter.addRow()
-            for input, place in $(".day", $row)
-                @counter.setupInput input, select, index, place
-            
-            # Add hidden stuff
-            $hidden = $("div.hidden", @timesheet)
-            $hidden.append partial 'hidden', {index, days:@scraper.days}
-            
-            # Adjust linecount
-            $lineCount = $("input[name='linecount']", $hidden)
-            newLineCount = Number($lineCount.val()) + 1
-            $lineCount.val newLineCount
-            
-            # Prevent default click action
-            false
+    addNewRow: ->
+        # Create new row
+        index = @counter.nextIndex()
+        selectOptions = @scraper.selectOptions
+        $row = $ partial 'row', {selectOptions, index, days:@scraper.days}
+        
+        # Setup filter
+        @setupFilter
+            $select : $("select", $row)
+            $filter : $(".filter-text", $row)
+        
+        # Insert new row
+        $("tr.totals", @timesheet).before $row
+        
+        # Tell counter about the new row
+        select = $("select", $row)
+        @counter.addRow($(".task.total span", $row))
+        for input, place in $(".day", $row)
+            @counter.setupInput input, select, index, place
+        
+        # Add hidden stuff
+        $hidden = $("div.hidden", @timesheet)
+        $hidden.append partial 'hidden', {index, days:@scraper.days}
+        
+        # Adjust linecount
+        $lineCount = $("input[name='linecount']", $hidden)
+        newLineCount = Number($lineCount.val()) + 1
+        $lineCount.val newLineCount
+        
+        # Prevent default click action
+        false
                 
     bodyFromText: (data) ->
         index = data.indexOf "<body"
@@ -350,14 +377,17 @@ styler =
         $filter ?= $(".filter-text")
         {options, selectOptions} = @scraper
         
+        self = this
         $select.change ->
             el = $(this)
             if el.val().length > 0
                 el.removeClass 'error'
+                self.counter.addTask()
             else
-            
+                self.counter.removeTask()
                 if Number($('.task.total span', el.parent().parent()).text()) > 0
                     el.addClass 'error'
+            self.counter.checkFullness()
                 
         $filter.keyup ->                
             el = $(this)
