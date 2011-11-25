@@ -4,7 +4,7 @@ jasmine = require 'jasmine-node'
 {loadTestPage} = require './parse'
 {makeScraper} = require '../src/parse'
 
-loadTestPage (window, $) ->
+loadTestPage ($) ->
     # Set scraper as a global for the tests
     body = $("body")
     $("script:last", body).addClass("activities_javascript")
@@ -18,6 +18,7 @@ loadTestPage (window, $) ->
     isVerbose = false
     showColors = true
     junitreport = report:false
+    useRequireJs = false
     
     # Run the tests
-    jasmine.executeSpecsInFolder folder, done, isVerbose, showColors, teamcity, matcher, junitreport
+    jasmine.executeSpecsInFolder folder, done, isVerbose, showColors, teamcity, useRequireJs, matcher, junitreport
