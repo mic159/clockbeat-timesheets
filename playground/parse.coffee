@@ -14,12 +14,12 @@ loadTestPage = (cb, {context}={}) ->
     html: 'page.html'
     scripts: ['../extension/libraries/jquery.js']
     done: (errors, window) ->
-      cb.call context, window, window.$
+      cb.call context, window.$
 
 if module.parent
   exports.loadTestPage = loadTestPage
 else
   # Loaded as a script
   {makeScraper} = require '../src/parse'
-  loadTestPage (window, $) ->
-    makeScraper(window, $).start()
+  loadTestPage ($) ->
+    makeScraper($, $("body")).start()
